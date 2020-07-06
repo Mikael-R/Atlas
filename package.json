@@ -1,0 +1,43 @@
+{
+  "name": "bot-admin-discord",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "commit": "npx git-cz",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpileOnly --ignore-watch node_modules src/index.ts",
+    "format": "npx standard --fix",
+    "build": "babel src --extensions \".ts\" --out-dir dist --copy-files",
+    "prod": "npm run build && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mikael-R/bot-admin-discord.git"
+  },
+  "keywords": [],
+  "author": "Mikael Rolim de Aquino <mikarg9@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/node": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "babel-plugin-module-resolver": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.18",
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.6",
+    "@types/jsdom": "^16.2.3",
+    "@types/node": "^14.0.14",
+    "@types/request": "^2.48.5",
+    "ts-node-dev": "^1.0.0-pre.50",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^3.9.6"
+  },
+  "bugs": {
+    "url": "https://github.com/Mikael-R/bot-admin-discord/issues"
+  },
+  "homepage": "https://github.com/Mikael-R/bot-admin-discord#readme"
+}
