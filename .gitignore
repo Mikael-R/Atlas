@@ -4,5 +4,6 @@ package-*.json
 package.json.*
 yarn.lock
 yarn-*.log
+*.env
 
 dist
