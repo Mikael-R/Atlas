@@ -23,7 +23,9 @@
     "@babel/node": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
-    "babel-plugin-module-resolver": "^4.0.0"
+    "babel-plugin-module-resolver": "^4.0.0",
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.18",
