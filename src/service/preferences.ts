@@ -1,4 +1,10 @@
-let preferences = {
+interface Preferences {
+  flag: string,
+  title: string,
+  color: string
+}
+
+const preferences: Preferences = {
   flag: '$',
   title: 'bot-admin-discord',
   color: '#4e4784'
