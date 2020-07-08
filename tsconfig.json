@@ -21,8 +21,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@service/*": ["./src/service/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@service/*": ["./src/service/*"]
     }
   },
   "include": [
