@@ -9,9 +9,9 @@ dotev.config()
 const client = new Discord.Client()
 
 client.on('ready', () => {
-  client.user.setActivity('amor e alegria!')
+  client.user.setActivity('love and happy!')
 
-  console.log(`Started: ${client.user.tag}`)
+  console.log(`> Started: "${client.user.tag}"`)
 })
 
 client.on('message', msg => {
@@ -27,11 +27,11 @@ client.on('message', msg => {
   }
 
   switch (command[1]) {
-    case `ping`:
+    case 'ping':
       msg.channel.send(serviceCommands.ping(embed, msg, client))
       break
 
-    case `altere`:
+    case 'change':
       msg.channel.send(serviceCommands.changePreference(embed, command))
       break
 

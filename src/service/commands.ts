@@ -10,8 +10,8 @@ const createEmbed = (title: string, color: string) => {
 const invalidCommand = (embed: Discord.MessageEmbed, flag: string) => {
   const message: Array<string> = []
 
-  message.push(':purple_circle: Comando inválido.')
-  message.push(`:purple_circle: Use **${flag} ajuda** para ver a lista de comandos.`)
+  message.push(':purple_circle: Invalid command.')
+  message.push(`:purple_circle: Use **${flag} help** to view command list.`)
 
   embed.setDescription(message.join('\n\n'))
 
@@ -36,10 +36,10 @@ const ping = (
 
 const changePreference = (embed: Discord.MessageEmbed, command: Array<string>) => {
   if (!command[2] || !command[3]) {
-    embed.setDescription(`:purple_circle: O parâmetro não foi informado`)
+    embed.setDescription(`:purple_circle: Parameter not informed`)
   }
   else if (!existPreference(command[2])) {
-    embed.setDescription(`:purple_circle: O parâmetro "${command[2]}" não existe`)
+    embed.setDescription(`:purple_circle: Parameter "${command[2]}" not found`)
   }
   else {
     let newValue: string = command.join(' ').match(/('|")(.*)('|")/)
@@ -49,7 +49,7 @@ const changePreference = (embed: Discord.MessageEmbed, command: Array<string>) =
     newValue = replaceAll(newValue, ['\'', '\"'], '')
 
     updatePreference(command[2], newValue)
-    embed.setDescription(`:purple_circle: Alterado: **${command[2]}** para "${newValue}"`)
+    embed.setDescription(`:purple_circle: Changed: **${command[2]}** to "${newValue}"`)
   }
 
   return embed
