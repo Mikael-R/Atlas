@@ -16,23 +16,22 @@ client.on('ready', () => {
 
 client.on('message', msg => {
   const command: Array<string> = msg.content
-    .toLocaleLowerCase()
     .replace(/\s{2,}/g, ' ')
     .split(' ')
 
   const { flag, title, color } = getPreferences()
   const embed: Discord.MessageEmbed = serviceCommands.createEmbed(title, color)
 
-  if (command[0] !== flag) {
-    return null
+  if (command[0].toLocaleLowerCase() !== flag.toLocaleLowerCase()) {
+    return
   }
 
-  switch (command.join(' ')) {
-    case `${flag} ping`:
+  switch (command[1]) {
+    case `ping`:
       msg.channel.send(serviceCommands.ping(embed, msg, client))
       break
 
-    case `${flag} altere ${command[2]} ${command[3]}`:
+    case `altere`:
       msg.channel.send(serviceCommands.changePreference(embed, command))
       break
 
