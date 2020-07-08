@@ -36,20 +36,18 @@ const ping = (
 
 const changePreference = (embed: Discord.MessageEmbed, command: Array<string>) => {
   if (!command[2] || !command[3]) {
-    embed.setDescription(`:purple_circle: Parameter not informed`)
-  }
-  else if (!existPreference(command[2])) {
+    embed.setDescription(':purple_circle: Parameter not informed')
+  } else if (!existPreference(command[2])) {
     embed.setDescription(`:purple_circle: Parameter "${command[2]}" not found`)
-  }
-  else {
+  } else {
     let newValue: string = command.join(' ').match(/('|")(.*)('|")/)
       ? command.join(' ').match(/('|")(.*)('|")/)[0]
       : command[3]
 
-    newValue = replaceAll(newValue, ['\'', '\"'], '')
+    newValue = replaceAll(newValue, ['\'', '"'], '')
 
     updatePreference(command[2], newValue)
-    embed.setDescription(`:purple_circle: Changed: **${command[2]}** to "${newValue}"`)
+    embed.setDescription(`:purple_circle: Changed: **${command[2]}** to **${newValue}**`)
   }
 
   return embed

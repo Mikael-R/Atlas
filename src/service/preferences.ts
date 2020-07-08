@@ -15,7 +15,7 @@ const getPreferences = () => {
 }
 
 const existPreference = (parameter: string) => {
-  return preferences[parameter] ? true : false
+  return !!preferences[parameter]
 }
 
 const updatePreference = (parameter: string, value: string) => {
