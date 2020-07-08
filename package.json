@@ -1,7 +1,7 @@
 {
   "name": "bot-admin-discord",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bot to help a manage you server",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpileOnly --ignore-watch node_modules src/index.ts",
