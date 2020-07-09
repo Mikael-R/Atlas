@@ -1,10 +1,8 @@
 import Discord from 'discord.js'
-import dotev from 'dotenv'
+import 'dotenv/config'
 
 import * as serviceCommands from '@service/commands'
 import { getPreferences } from '@service/preferences'
-
-dotev.config()
 
 const client = new Discord.Client()
 

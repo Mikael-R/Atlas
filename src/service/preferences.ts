@@ -6,8 +6,8 @@ interface Preferences {
 
 const preferences: Preferences = {
   flag: '$',
-  title: 'bot-admin-discord',
-  color: '#4e4784'
+  title: 'Bot Admin Discord',
+  color: '#7c66c6'
 }
 
 const getPreferences = () => {

@@ -6,4 +6,4 @@ yarn.lock
 yarn-*.log
 *.env
 
-dist
+dist/
