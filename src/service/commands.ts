@@ -1,5 +1,6 @@
 import Discord from 'discord.js'
 
+import replaceAll from '@utils/replaceAll'
 import { existPreference, updatePreference } from '@service/preferences'
 
 const createEmbed = (title: string, color: string) => {
@@ -40,7 +41,7 @@ const changePreference = (embed: Discord.MessageEmbed, command: Array<string>) =
     embed.setDescription(`:purple_circle: Parameter "${command[2]}" not found`)
   } else {
     const newValue: string = command.join(' ').match(/('|")(.*)('|")/)
-      ? command.join(' ').match(/('|")(.*)('|")/)[0].replaceAll(['\'', '"'], '')
+      ? replaceAll(command.join(' ').match(/('|")(.*)('|")/)[0], ['\'', '"'], '')
       : command[3]
 
     updatePreference(command[2], newValue)
