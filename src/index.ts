@@ -12,15 +12,23 @@ client.on('ready', () => {
   console.log(`> Started: "${client.user.tag}"`)
 })
 
+client.on('guildCreate', guild => {
+  console.log(`> Added: | Name${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`)
+})
+
+client.on('guildDelete', guild => {
+  console.log(`> Removed: |Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`)
+})
+
 client.on('message', msg => {
   const command: Array<string> = msg.content
     .replace(/\s{2,}/g, ' ')
     .split(' ')
 
   const { flag, title, color } = getPreferences()
-  const embed: Discord.MessageEmbed = serviceCommands.createEmbed(title, color)
+  const embed = serviceCommands.createEmbed(title, color)
 
-  if (command[0].toLocaleLowerCase() !== flag.toLocaleLowerCase()) {
+  if (command[0] !== flag || msg.channel.type === 'dm' || msg.author.bot) {
     return
   }
 
@@ -33,8 +41,12 @@ client.on('message', msg => {
       msg.channel.send(serviceCommands.changePreference(embed, command))
       break
 
+    case 'userinfo':
+      msg.channel.send(serviceCommands.getUserInformation(embed, msg))
+      break
+
     default:
-      msg.channel.send(serviceCommands.invalidCommand(embed, flag))
+      msg.channel.send(serviceCommands.invalidCommand(embed, command[0]))
   }
 })
 

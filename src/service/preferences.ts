@@ -1,8 +1,5 @@
-interface Preferences {
-  flag: string,
-  title: string,
-  color: string
-}
+// eslint-disable-next-line no-unused-vars
+import { Preferences } from '@service/types'
 
 const preferences: Preferences = {
   flag: '$',
