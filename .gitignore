@@ -1,11 +1,10 @@
 node_modules/
-dist/
-
 .vscode/
-package-*.json
-package.json.*
-yarn.lock
-yarn-*.log
-*.env
 
-dist/
+build/
+
+*-lock.json
+*.lock
+*.env
+*.log
+
