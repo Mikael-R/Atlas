@@ -2,12 +2,13 @@
   "name": "bot-admin-discord",
   "version": "1.0.0",
   "description": "Bot to help a manage you server",
-  "main": "dist/index.js",
+  "main": "build/index.js",
+  "private": true,
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpileOnly --ignore-watch node_modules src/index.ts",
     "format": "eslint src --ext ts",
-    "build": "babel src --extensions \".ts\" --out-dir dist --copy-files",
-    "prod": "npm run build && node dist/index.js"
+    "build": "rm -rf build && babel src --extensions \".ts\" --out-dir build --copy-files --no-comments",
+    "prod": "npm run build && node build/index.js"
   },
   "repository": {
     "type": "git",
@@ -45,6 +46,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "git-cz": "^4.7.0",
     "husky": "^4.2.5",
     "ts-node-dev": "^1.0.0-pre.50",
     "tsconfig-paths": "^3.9.0",
@@ -52,7 +54,8 @@
   },
   "husky": {
     "hooks": {
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
+      "pre-commit": "npm run format",
+      "prepare-commit-msg": "exec < /dev/tty && gitcz --hook || true",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },

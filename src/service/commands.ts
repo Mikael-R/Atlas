@@ -1,6 +1,5 @@
 import Discord from 'discord.js'
 
-// eslint-disable-next-line no-unused-vars
 import * as Types from '@service/types'
 
 import replaceAll from '@utils/replaceAll'
@@ -11,7 +10,7 @@ const createEmbed: Types.CreateEmbed = (title, color) => {
 }
 
 const invalidCommand: Types.InvalidCommand = (embed, flag) => {
-  const message: Array<string> = []
+  const message: string[] = []
 
   message.push(':purple_circle: Invalid command.')
   message.push(`:purple_circle: Use **${flag} help** to view command list.`)
@@ -22,7 +21,7 @@ const invalidCommand: Types.InvalidCommand = (embed, flag) => {
 }
 
 const ping: Types.Ping = (embed, msg, client) => {
-  const message: Array<string> = []
+  const message: string[] = []
 
   message.push(':ping_pong: Pong!')
   message.push(`:purple_circle: Server: ${Date.now() - msg.createdTimestamp}ms`)

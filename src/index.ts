@@ -17,7 +17,7 @@ client.on('guildCreate', guild => {
 })
 
 client.on('guildDelete', guild => {
-  console.log(`> Removed: |Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`)
+  console.log(`> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`)
 })
 
 client.on('message', msg => {
@@ -26,11 +26,12 @@ client.on('message', msg => {
     .split(' ')
 
   const { flag, title, color } = getPreferences()
-  const embed = serviceCommands.createEmbed(title, color)
 
   if (command[0] !== flag || msg.channel.type === 'dm' || msg.author.bot) {
     return
   }
+
+  const embed = serviceCommands.createEmbed(title, color)
 
   switch (command[1]) {
     case 'ping':

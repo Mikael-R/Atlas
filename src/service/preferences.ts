@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import { Preferences } from '@service/types'
 
 const preferences: Preferences = {

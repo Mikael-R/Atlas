@@ -1,7 +1,6 @@
-// eslint-disable-next-line no-unused-vars
 import Discord from 'discord.js'
 
-interface Preferences {
+export interface Preferences {
   flag: string,
   title: string,
   color: string
