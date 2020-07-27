@@ -1,33 +1,23 @@
 import Discord from 'discord.js'
 
-export interface Preferences {
-  flag: string,
-  title: string,
-  color: string
-}
+export type CreateEmbed = (title: string) => Discord.MessageEmbed
 
-export interface ChangePreference {
-  (embed: Discord.MessageEmbed, command: Array<string>): Discord.MessageEmbed
-}
+export type InvalidCommand = (embed: Discord.MessageEmbed, command: string) => Discord.MessageEmbed
 
-export interface CreateEmbed {
-  (title: string, color: string): Discord.MessageEmbed
-}
-
-export interface InvalidCommand {
-  (embed: Discord.MessageEmbed, flag: string): Discord.MessageEmbed
-}
-
-export interface Ping {
+export type Ping = (
   (
     embed: Discord.MessageEmbed,
-    msg: Discord.Message,
-    client: Discord.Client
+    ws: Discord.WebSocketManager,
+    msg: Discord.Message
   )
-    : Discord.MessageEmbed
-}
+    => Discord.MessageEmbed
+)
 
-export interface UserInformation {
+export type GetUserInformation = (
+  (embed: Discord.MessageEmbed, msg: Discord.Message) => Discord.MessageEmbed
+)
+
+export type UserInformation = {
   tag: string
   name: string,
   discriminator: string,
@@ -39,6 +29,21 @@ export interface UserInformation {
   joined: string
 }
 
-export interface GetUserInformation {
-  (embed: Discord.MessageEmbed, msg: Discord.Message) : Discord.MessageEmbed
+export type GetServerInformation = (
+  (embed: Discord.MessageEmbed, guild: Discord.Guild) => Discord.MessageEmbed
+)
+
+export type ServerInformation = {
+  name: string,
+  members: number,
+  icon: string,
+  premiumSubscriptionCount: number,
+  region: string,
+  ownerNickname: string,
+  id: string,
+  created: string
 }
+
+export type AddedOnServer = (ownerNickname: string, serverName: string) => Discord.MessageEmbed
+
+export type RemovedOnServer = (ownerNickname: string, serverName: string) => Discord.MessageEmbed
