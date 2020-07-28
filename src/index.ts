@@ -35,6 +35,10 @@ client.on('message', msg => {
   const embed = serviceCommands.createEmbed(msg.guild.name)
 
   switch (commands[1]) {
+    case 'help':
+      msg.channel.send(serviceCommands.help(embed))
+      break
+
     case 'ping':
       msg.channel.send(serviceCommands.ping(embed, client.ws, msg))
       break

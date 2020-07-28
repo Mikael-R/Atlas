@@ -3,12 +3,12 @@ import Discord from 'discord.js'
 import * as Types from '@service/types'
 
 export const randomizeStatus: Types.RandomizeStatus = (client) => {
-  const status = {
-    0: { type: 'LISTENING', name: '$ help' },
-    1: { type: 'PLAYING', name: 'stone on the moon' },
-    2: { type: 'STREAMING', name: 'love and happy' },
-    3: { type: 'WATCHING', name: `${client.channels.cache.size} channels` }
-  }
+  const status: Types.Status = [
+    { type: 'LISTENING', name: '$ help' },
+    { type: 'PLAYING', name: 'stone on the moon' },
+    { type: 'STREAMING', name: 'love and happy' },
+    { type: 'WATCHING', name: `${client.channels.cache.size} channels` }
+  ]
 
   const getRandomInt = (min: number, max: number): number => {
     min = Math.ceil(min)
@@ -17,7 +17,7 @@ export const randomizeStatus: Types.RandomizeStatus = (client) => {
     return Math.floor(Math.random() * (max - min)) + min
   }
 
-  const index = getRandomInt(0, 3)
+  const index = getRandomInt(0, status.length)
 
   client.user.setActivity(status[index])
 }
@@ -37,13 +37,28 @@ export const invalidCommand: Types.InvalidCommand = (embed, command) => {
   return embed
 }
 
+export const help: Types.Help = (embed) => {
+  const message: string[] = []
+
+  message.push(':blue_circle: To view more information about command or all commands access: https://mikael-r.github.io/Atlas')
+
+  embed.addField('$ ping', 'Show BOT and API ping in milliseconds')
+  embed.addField('$ userinfo', 'Show information about you or user mentioned')
+  embed.addField('$ serverinfo', 'Show information about this server')
+  embed.addField('$ clear', 'Delete specified previous messages')
+
+  embed.setDescription(message.join('\n\n'))
+
+  return embed
+}
+
 export const deleteMessages: Types.DeleteMessages = (embed, msg, limit) => {
   const message: string[] = []
 
   if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
     message.push(':blue_circle: You not have permission to run this command')
   } else if (!limit || Number(limit) < 2 || isNaN(Number(limit))) {
-    message.push(':blue_circle: You not informed a limit or this value is invalid')
+    message.push(':blue_circle: You not informed a limit or is invalid value')
     message.push(':blue_circle: Use ***** to clear all messages')
   } else {
     msg.channel.messages.fetch({ limit: limit === '*' ? undefined : Number(limit) })
@@ -125,26 +140,28 @@ export const getServerInformation: Types.GetServerInformation = (embed, guild) =
 }
 
 export const addedOnServer: Types.AddedOnServer = (ownerNickname, serverName) => {
+  const embed = createEmbed('')
   const message: string[] = []
 
-  message.push(`:robot: Hello ${ownerNickname}`)
+  message.push(`:robot: Hello **${ownerNickname}**`)
   message.push(`:blue_heart: Thanks for add me on **${serverName}**`)
-  message.push(':wrench: Entry on https://mikael-r.github.io/Atlas to view my commands')
+  message.push(':wrench: Access https://mikael-r.github.io/Atlas to view my commands')
 
-  const embed = createEmbed('Atlas').setDescription(message.join('\n\n'))
+  embed.setDescription(message.join('\n\n'))
 
   return embed
 }
 
 export const removedOnServer: Types.RemovedOnServer = (ownerNickname, serverName) => {
+  const embed = createEmbed('')
   const message: string[] = []
 
-  message.push(`:robot: Hello ${ownerNickname}`)
+  message.push(`:robot: Hello **${ownerNickname}**`)
   message.push(`:broken_heart: I was removed from server **${serverName}** and I expect helped you`)
   message.push(':leaves: Information about you server will be saved for 7 days, in case you add me again')
-  message.push(':wrench: Entry on https://mikael-r.github.io/Atlas to view my commands')
+  message.push(':wrench: Access https://mikael-r.github.io/Atlas to view my commands')
 
-  const embed = createEmbed('Atlas').setDescription(message.join('\n\n'))
+  embed.setDescription(message.join('\n\n'))
 
   return embed
 }
