@@ -13,6 +13,10 @@ export type Ping = (
     => Discord.MessageEmbed
 )
 
+export type DeleteMessages = (
+  (embed: DiscordMessageEmbed, msg: Discord.Message, limit: string) => Discord.MessageEmbed
+)
+
 export type GetUserInformation = (
   (embed: Discord.MessageEmbed, msg: Discord.Message) => Discord.MessageEmbed
 )

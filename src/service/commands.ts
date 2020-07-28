@@ -17,6 +17,26 @@ export const invalidCommand: Types.InvalidCommand = (embed, command) => {
   return embed
 }
 
+export const deleteMessages: Types.DeleteMessages = (embed, msg, limit) => {
+  const message: string[] = []
+
+  if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
+    message.push(':blue_circle: You not have permission to run this command')
+  } else if (!limit || Number(limit) < 2 || isNaN(Number(limit))) {
+    message.push(':blue_circle: You not informed a limit or this value is invalid')
+    message.push(':blue_circle: Use ***** to clear all messages')
+  } else {
+    msg.channel.messages.fetch({ limit: limit === '*' ? undefined : Number(limit) })
+      .then(message => msg.channel.bulkDelete(message))
+
+    message.push(`:blue_circle: <@${msg.author.id}> has deleted ${limit === '*' ? 'all' : limit} messages`)
+  }
+
+  embed.setDescription(message.join('\n\n'))
+
+  return embed
+}
+
 export const ping: Types.Ping = (embed, ws, msg) => {
   const message: string[] = []
 
@@ -47,12 +67,12 @@ export const getUserInformation: Types.GetUserInformation = (embed, msg) => {
   embed
     .setAuthor(userInformation.tag, userInformation.avatar)
     .setThumbnail(userInformation.avatar)
-    .addField('Name', userInformation.name, true)
-    .addField('Discriminator', userInformation.discriminator, true)
-    .addField('Status', userInformation.status, true)
-    .addField('Bot', userInformation.isBot, true)
-    .addField('Create Account', userInformation.createAccount, true)
-    .addField('Joined', userInformation.joined, true)
+    .addField('Name', userInformation.name)
+    .addField('Discriminator', userInformation.discriminator)
+    .addField('Status', userInformation.status)
+    .addField('Bot', userInformation.isBot)
+    .addField('Create Account', userInformation.createAccount)
+    .addField('Joined', userInformation.joined)
     .addField('ID', userInformation.id, false)
 
   return embed
@@ -62,7 +82,7 @@ export const getServerInformation: Types.GetServerInformation = (embed, guild) =
   const serverInformation: Types.ServerInformation = {
     name: guild.name,
     icon: guild.iconURL(),
-    ownerNickname: guild.owner.displayName,
+    ownerNickname: guild.owner.user.tag,
     created: guild.createdAt.toLocaleDateString('en-US'),
     region: guild.region,
     members: guild.memberCount,
@@ -75,10 +95,10 @@ export const getServerInformation: Types.GetServerInformation = (embed, guild) =
     .setAuthor(serverInformation.name)
     .setThumbnail(serverInformation.icon)
     .addField('Owner', serverInformation.ownerNickname)
-    .addField('Created', serverInformation.created, true)
-    .addField('Region', serverInformation.region, true)
-    .addField('Members', serverInformation.members, true)
-    .addField('Premium Subscription Count', serverInformation.premiumSubscriptionCount, true)
+    .addField('Created', serverInformation.created)
+    .addField('Region', serverInformation.region)
+    .addField('Members', serverInformation.members)
+    .addField('Premium Subscription Count', serverInformation.premiumSubscriptionCount)
     .addField('ID', serverInformation.id, false)
 
   return embed

@@ -14,7 +14,7 @@ client.on('ready', () => {
 client.on('guildCreate', guild => {
   guild.owner.send(serviceCommands.addedOnServer(guild.owner.displayName, guild.name))
 
-  console.log(`> Added: | Name${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`)
+  console.log(`> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`)
 })
 
 client.on('guildDelete', guild => {
@@ -45,6 +45,10 @@ client.on('message', msg => {
 
     case 'serverinfo':
       msg.channel.send(serviceCommands.getServerInformation(embed, msg.guild))
+      break
+
+    case 'clear':
+      msg.channel.send(serviceCommands.deleteMessages(embed, msg, commands[2]))
       break
 
     default:

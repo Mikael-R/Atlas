@@ -1,5 +1,5 @@
 {
-  "name": "bot-admin-discord",
+  "name": "Atlas",
   "version": "1.0.0",
   "description": "Bot to help a manage you server",
   "main": "build/index.js",
