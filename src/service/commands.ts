@@ -2,6 +2,26 @@ import Discord from 'discord.js'
 
 import * as Types from '@service/types'
 
+export const randomizeStatus: Types.RandomizeStatus = (client) => {
+  const status = {
+    0: { type: 'LISTENING', name: '$ help' },
+    1: { type: 'PLAYING', name: 'stone on the moon' },
+    2: { type: 'STREAMING', name: 'love and happy' },
+    3: { type: 'WATCHING', name: `${client.channels.cache.size} channels` }
+  }
+
+  const getRandomInt = (min: number, max: number): number => {
+    min = Math.ceil(min)
+    max = Math.floor(max + 1)
+
+    return Math.floor(Math.random() * (max - min)) + min
+  }
+
+  const index = getRandomInt(0, 3)
+
+  client.user.setActivity(status[index])
+}
+
 export const createEmbed: Types.CreateEmbed = (title) => {
   return new Discord.MessageEmbed().setTitle(title).setColor('#3B3B98')
 }

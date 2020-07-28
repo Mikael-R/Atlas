@@ -6,7 +6,7 @@ import * as serviceCommands from '@service/commands'
 const client = new Discord.Client()
 
 client.on('ready', () => {
-  client.user.setActivity('love and happy!')
+  setInterval(() => serviceCommands.randomizeStatus(client), 12000)
 
   console.log(`> Started: "${client.user.tag}"`)
 })

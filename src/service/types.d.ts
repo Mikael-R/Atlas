@@ -1,5 +1,7 @@
 import Discord from 'discord.js'
 
+export type RandomizeStatus = (client: Discord.Client) => void
+
 export type CreateEmbed = (title: string) => Discord.MessageEmbed
 
 export type InvalidCommand = (embed: Discord.MessageEmbed, command: string) => Discord.MessageEmbed
