@@ -42,7 +42,7 @@ export const help: Types.Help = (embed) => {
 
   message.push(':blue_circle: To view more information about command or all commands access: https://mikael-r.github.io/Atlas')
 
-  embed.addField('$ ping', 'Show BOT and API ping in milliseconds')
+  embed.addField('$ ping', 'Show bot and API ping in milliseconds')
   embed.addField('$ userinfo', 'Show information about you or user mentioned')
   embed.addField('$ serverinfo', 'Show information about this server')
   embed.addField('$ clear', 'Delete specified previous messages')

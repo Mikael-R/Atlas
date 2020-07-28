@@ -1,7 +1,7 @@
 {
-  "name": "Atlas",
+  "name": "atlas",
   "version": "1.0.0",
-  "description": "Bot to help a manage you server",
+  "description": "Discord bot to help a manage you server",
   "main": "build/index.js",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mikael-R/bot-admin-discord.git"
+    "url": "git+https://github.com/Mikael-R/Atlas.git"
   },
   "keywords": [],
   "author": "Mikael Rolim de Aquino <mikarg9@gmail.com>",
@@ -65,7 +65,7 @@
     }
   },
   "bugs": {
-    "url": "https://github.com/Mikael-R/bot-admin-discord/issues"
+    "url": "https://github.com/Mikael-R/Atlas/issues"
   },
-  "homepage": "https://github.com/Mikael-R/bot-admin-discord#readme"
+  "homepage": "https://github.com/Mikael-R/Atlas#readme"
 }

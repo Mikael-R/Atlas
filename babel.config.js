@@ -15,8 +15,7 @@ module.exports = {
       'module-resolver',
       {
         alias: {
-          '@service': './src/service',
-          '@utils': './src/utils'
+          '@service': './src/service'
         }
       }
     ]
