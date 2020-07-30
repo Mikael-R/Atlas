@@ -43,18 +43,26 @@ export const invalidCommand: InvalidCommand = (embed, command) => {
 
 export const help: Command<Help> = {
   aliases: ['help', 'h'],
-  description: 'Show command list',
-  usage: 'help',
-  example: 'help',
-  run: (embed) => {
+  description: 'Show commands or more information about specific command',
+  usage: '$help [command or empty to view list]',
+  example: '$help ping',
+  run: (embed, command) => {
     const message: string[] = []
 
-    message.push(':nazar_amulet: To view more information about command or all commands access: https://mikael-r.github.io/Atlas')
+    if (!command) {
+      message.push(':nazar_amulet: Use ``$help [command]`` to view more information about specific command')
 
-    embed.addField('$ping', 'Show bot and API ping in milliseconds')
-    embed.addField('$clear', 'Delete specified previous messages')
-    embed.addField('$userinfo', 'Show information about you or user mentioned')
-    embed.addField('$serverinfo', 'Show information about this server')
+      embed.addField('$ping', 'Show bot and API ping in milliseconds')
+      embed.addField('$clear', 'Delete specified previous messages')
+      embed.addField('$userinformation', 'Show information about you or user mentioned')
+      embed.addField('$serverinformation', 'Show information about this server')
+    } else {
+      embed.addField('Command', command.aliases[0])
+      embed.addField('Aliases', command.aliases.toString())
+      embed.addField('Description', command.description)
+      embed.addField('Usage', command.usage)
+      if (command.example) embed.addField('Example', command.example)
+    }
 
     embed.setDescription(message.join('\n\n'))
 
@@ -65,8 +73,8 @@ export const help: Command<Help> = {
 export const clear: Command<Clear> = {
   aliases: ['clear', 'c'],
   description: 'Delete specified previous messages',
-  usage: 'clear [limit]',
-  example: 'clear 7',
+  usage: '$clear [limit]',
+  example: '$clear 7',
   run: (embed, msg, limit) => {
     const message: string[] = []
 
@@ -92,8 +100,7 @@ export const clear: Command<Clear> = {
 export const ping: Command<Ping> = {
   aliases: ['ping', 'p'],
   description: 'Delete specified previous messages',
-  usage: 'ping',
-  example: 'ping',
+  usage: '$ping',
   run: (embed, ws, msg) => {
     const message: string[] = []
 
@@ -108,10 +115,10 @@ export const ping: Command<Ping> = {
 }
 
 export const getUserInformation: Command<GetUserInformation> = {
-  aliases: ['userinfo', 'userinformation', 'usinfo'],
+  aliases: ['userinformation', 'userinfo', 'usinfo'],
   description: 'Show information about you or user mentioned',
-  usage: 'userinfo [user mention]',
-  example: 'userinfo @Atlas',
+  usage: '$userinfo [user mention or empty for you]',
+  example: '$userinfo @Atlas',
   run: (embed, msg) => {
     const user = msg.mentions.users.first() || msg.author
 
@@ -123,11 +130,6 @@ export const getUserInformation: Command<GetUserInformation> = {
       createAccount: user.createdAt.toUTCString(),
       joined: msg.guild.members.resolve(user.id).joinedAt.toUTCString(),
       roles: msg.guild.members.resolve(user.id).roles.cache,
-      formatRoles: (roles) => {
-        const format = ['']
-        roles.map(role => format.push(`<@&${role.id}>`))
-        return format.join('  ')
-      },
       id: user.id
     }
 
@@ -140,7 +142,11 @@ export const getUserInformation: Command<GetUserInformation> = {
       .addField('Joined', userInformation.joined)
       .addField('Status', userInformation.status, true)
       .addField('Bot', userInformation.isBot, true)
-      .addField(`Roles [${userInformation.roles.size}]`, userInformation.formatRoles(userInformation.roles))
+      .addField(`Roles [${userInformation.roles.size}]`, (() => {
+        const format = ['']
+        userInformation.roles.map(role => format.push(`<@&${role.id}>`))
+        return format.join('  ')
+      })())
       .setFooter(`ID: ${userInformation.id}`)
 
     return embed
@@ -148,10 +154,9 @@ export const getUserInformation: Command<GetUserInformation> = {
 }
 
 export const getServerInformation: Command<GetServerInformation> = {
-  aliases: ['serverinfo', 'serverinformation', 'svinfo'],
+  aliases: ['serverinformation', 'serverinfo', 'svinfo'],
   description: 'Show information about this server',
-  usage: 'serverinfo',
-  example: 'serverinfo',
+  usage: '$serverinformation',
   run: (embed, guild) => {
     const serverInformation: ServerInformation = {
       name: guild.name,

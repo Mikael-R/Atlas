@@ -15,11 +15,11 @@ export type Command<Run extends Function> = {
   aliases: string[]
   description: string
   usage: string
-  example: string
+  example?: string
   run: Run
 }
 
-export type Help = (embed: Discord.MessageEmbed) => Discord.MessageEmbed
+export type Help = (embed: Discord.MessageEmbed, command: Command<Function>) => Discord.MessageEmbed
 
 export type Clear = (
   (embed: DiscordMessageEmbed, msg: Discord.Message, limit: string) => Discord.MessageEmbed
@@ -46,7 +46,6 @@ export type UserInformation = {
   createAccount: string
   joined: string
   roles: Discord.Collection<string, Discord.Role>
-  formatRoles: (roles: Discord.Collection<string, Discord.Role>) => string
   id: string
 }
 

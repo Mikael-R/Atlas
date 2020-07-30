@@ -41,7 +41,7 @@ client.on('message', msg => {
 
   switch (true) {
     case serviceCommands.help.aliases.indexOf(commands[0]) !== -1:
-      msg.channel.send(serviceCommands.help.run(embed))
+      msg.channel.send(serviceCommands.help.run(embed, serviceCommands[commands[1]]))
       break
 
     case serviceCommands.clear.aliases.indexOf(commands[0]) !== -1:
