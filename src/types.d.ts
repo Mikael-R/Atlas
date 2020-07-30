@@ -1,4 +1,4 @@
-import Discord from 'discord.js'
+import Discord, { GuildMember } from 'discord.js'
 
 export type RandomizeStatus = (client: Discord.Client) => void
 
@@ -41,12 +41,12 @@ export type GetUserInformation = (
 export type UserInformation = {
   tag: string
   avatar: string
-  name: string
-  discriminator: string
   status: string
   isBot: string
   createAccount: string
   joined: string
+  roles: Discord.Collection<string, Discord.Role>
+  formatRoles: (roles: Discord.Collection<string, Discord.Role>) => string
   id: string
 }
 

@@ -118,25 +118,30 @@ export const getUserInformation: Command<GetUserInformation> = {
     const userInformation: UserInformation = {
       tag: user.tag,
       avatar: user.displayAvatarURL(),
-      name: user.username,
-      discriminator: `#${user.discriminator}`,
       status: user.presence.status,
       isBot: user.bot ? 'Yes' : 'No',
       createAccount: user.createdAt.toUTCString(),
       joined: msg.guild.members.resolve(user.id).joinedAt.toUTCString(),
+      roles: msg.guild.members.resolve(user.id).roles.cache,
+      formatRoles: (roles) => {
+        const format = ['']
+        roles.map(role => format.push(`<@&${role.id}>`))
+        return format.join('  ')
+      },
       id: user.id
     }
 
     embed
+      .setTitle('')
+      .setDescription(user)
       .setAuthor(userInformation.tag, userInformation.avatar)
       .setThumbnail(userInformation.avatar)
-      .addField('Name', userInformation.name)
-      .addField('Discriminator', userInformation.discriminator)
       .addField('Status', userInformation.status)
       .addField('Bot', userInformation.isBot)
       .addField('Create Account', userInformation.createAccount)
       .addField('Joined', userInformation.joined)
-      .addField('ID', userInformation.id, false)
+      .addField(`Roles [${userInformation.roles.size}]`, userInformation.formatRoles(userInformation.roles))
+      .setFooter(`ID: ${userInformation.id}`)
 
     return embed
   }
