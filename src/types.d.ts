@@ -1,4 +1,4 @@
-import Discord, { GuildMember } from 'discord.js'
+import Discord from 'discord.js'
 
 export type RandomizeStatus = (client: Discord.Client) => void
 

@@ -136,10 +136,10 @@ export const getUserInformation: Command<GetUserInformation> = {
       .setDescription(user)
       .setAuthor(userInformation.tag, userInformation.avatar)
       .setThumbnail(userInformation.avatar)
-      .addField('Status', userInformation.status)
-      .addField('Bot', userInformation.isBot)
       .addField('Create Account', userInformation.createAccount)
       .addField('Joined', userInformation.joined)
+      .addField('Status', userInformation.status, true)
+      .addField('Bot', userInformation.isBot, true)
       .addField(`Roles [${userInformation.roles.size}]`, userInformation.formatRoles(userInformation.roles))
       .setFooter(`ID: ${userInformation.id}`)
 
@@ -170,11 +170,11 @@ export const getServerInformation: Command<GetServerInformation> = {
       .setThumbnail(serverInformation.icon)
       .addField('Owner', serverInformation.ownerNickname)
       .addField('Created', serverInformation.created)
-      .addField('Region', serverInformation.region)
-      .addField('Members', serverInformation.members)
-      .addField('Channels', serverInformation.channels)
+      .addField('Region', serverInformation.region, true)
+      .addField('Members', serverInformation.members, true)
+      .addField('Channels', serverInformation.channels, true)
       .addField('Premium Subscription Count', serverInformation.premiumSubscriptionCount)
-      .addField('ID', serverInformation.id, false)
+      .setFooter(`ID: ${serverInformation.id}`)
 
     return embed
   }
