@@ -15,7 +15,7 @@ client.on('ready', () => {
 client.on('guildCreate', guild => {
   const embed = serviceComplements.createEmbed({ color: '#1213BD' })
 
-  guild.owner.send(serviceComplements.addedOnServer(embed, guild.owner.displayName, guild.name))
+  serviceComplements.addedOnServer(guild, embed)
 
   console.log(`> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`)
 })
@@ -23,30 +23,30 @@ client.on('guildCreate', guild => {
 client.on('guildDelete', guild => {
   const embed = serviceComplements.createEmbed({ color: '#1213BD' })
 
-  guild.owner.send(serviceComplements.removedOnServer(embed, guild.owner.displayName, guild.name))
+  serviceComplements.addedOnServer(guild, embed)
 
   console.log(`> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`)
 })
 
-client.on('message', msg => {
-  const msgCommands = msg.content
+client.on('message', message => {
+  const msgCommands = message.content
     .replace(/\s{2,}/g, ' ')
     .split(' ')
 
-  if (msgCommands[0][0] !== '$' || msgCommands[0] === '$' || msg.channel.type === 'dm' || msg.author.bot) {
+  if (msgCommands[0][0] !== '$' || msgCommands[0] === '$' || message.channel.type === 'dm' || message.author.bot) {
     return
   }
 
   msgCommands[0] = msgCommands[0].slice(1) // remove flag (one character)
 
-  const embed = serviceComplements.createEmbed({ title: msg.guild.name, color: '#1213BD' })
+  const embed = serviceComplements.createEmbed({ title: message.guild.name, color: '#1213BD' })
 
   const command = serviceCommands.filter(cmd => cmd.name === msgCommands[0] || cmd.aliases.indexOf(msgCommands[0]) !== -1)[0]
 
   if (command) {
-    command.run(msg, embed, msgCommands)
+    command.run(message, embed, msgCommands)
   } else {
-    serviceComplements.invalidCommand(msg, embed, msgCommands)
+    serviceComplements.invalidCommand(message, embed, msgCommands)
   }
 })
 

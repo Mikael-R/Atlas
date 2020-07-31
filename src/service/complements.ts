@@ -2,9 +2,7 @@ import { MessageEmbed } from 'discord.js'
 
 import randInt from '@utils/randInt'
 
-import {
-  RandomizeStatus, Status, CreateEmbed, AddedOnServer, RemovedOnServer, InvalidCommand
-} from 'src/types'
+import { RandomizeStatus, Status, CreateEmbed, OnServer, InvalidCommand } from 'src/types'
 
 export const randomizeStatus: RandomizeStatus = (client) => {
   const status: Status = [
@@ -27,39 +25,41 @@ export const createEmbed: CreateEmbed = ({ title = '', color }) => {
   return embed
 }
 
-export const invalidCommand: InvalidCommand = (msg, embed, msgCommands) => {
-  const message: string[] = []
+export const invalidCommand: InvalidCommand = (message, embed, msgCommands) => {
+  const description: string[] = []
 
-  message.push(`:red_circle: Invalid command ${msgCommands[0] ? `**${msgCommands[0]}**` : ''}`)
-  message.push(':red_circle: Use **$help** to view command list')
+  description.push(`:red_circle: Invalid command ${msgCommands[0] ? `**${msgCommands[0]}**` : ''}`)
+  description.push(':red_circle: Use **$help** to view command list')
 
   embed.setColor('#E81010')
-  embed.setDescription(message.join('\n\n'))
+  embed.setDescription(description.join('\n\n'))
 
-  msg.channel.send(embed)
+  message.channel.send(embed)
 }
 
-export const addedOnServer: AddedOnServer = (embed, ownerNickname, serverName) => {
-  const message: string[] = []
+export const addedOnServer: OnServer = (guild, embed) => {
+  const description: string[] = []
 
-  message.push(`:robot: Hello **${ownerNickname}**`)
-  message.push(`:blue_heart: Thanks for add me on **${serverName}**`)
-  message.push(':wrench: Access https://mikael-r.github.io/Atlas to view my commands')
+  description.push(`:robot: Hello **${guild.owner.displayName}**`)
+  description.push(`:blue_heart: Thanks for add me on **${guild.name}**`)
+  description.push(':nazar_amulet: Use $help on server to view my commands')
+  description.push(':mag_right: Access https://mikael-r.github.io/Atlas to more information about me')
 
-  embed.setDescription(message.join('\n\n'))
+  embed.setDescription(description.join('\n\n'))
 
-  return embed
+  guild.owner.send(embed)
 }
 
-export const removedOnServer: RemovedOnServer = (embed, ownerNickname, serverName) => {
-  const message: string[] = []
+export const removedOnServer: OnServer = (guild, embed) => {
+  const description: string[] = []
 
-  message.push(`:robot: Hello **${ownerNickname}**`)
-  message.push(`:broken_heart: I was removed from server **${serverName}** and I expect helped you`)
-  message.push(':leaves: Information about you server will be saved for 7 days, in case you add me again')
-  message.push(':wrench: Access https://mikael-r.github.io/Atlas to view my commands')
+  description.push(`:robot: Hello **${guild.owner.displayName}**`)
+  description.push(`:broken_heart: I was removed from server **${guild.name}** and I expect helped you`)
+  description.push(':leaves: I will remember your server for 7 days, in case you add me again')
+  description.push(':nazar_amulet: Use $help on server to view my commands')
+  description.push(':mag_left: Access https://mikael-r.github.io/Atlas to more information about me')
 
-  embed.setDescription(message.join('\n\n'))
+  embed.setDescription(description.join('\n\n'))
 
-  return embed
+  guild.owner.send(embed)
 }

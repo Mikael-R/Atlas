@@ -8,13 +8,13 @@ const help: Command = {
   description: 'Show commands or more information about specific command',
   usage: '$help [command or empty to view list]',
   example: '$help ping',
-  run: (msg, embed, msgCommands) => {
-    const message: string[] = []
+  run: (message, embed, msgCommands) => {
+    const description: string[] = []
 
     const command: Command = Commands.default.filter(cmd => cmd.name === msgCommands[1] || cmd.aliases.indexOf(msgCommands[1]) !== -1)[0]
 
     if (!command) {
-      message.push(':nazar_amulet: Use ``$help [command]`` to view more information about specific command')
+      description.push(':nazar_amulet: Use ``$help [command]`` to view more information about specific command')
 
       Commands.default.map(cmd => embed.addField(cmd.name, cmd.description))
     } else {
@@ -25,38 +25,38 @@ const help: Command = {
       if (command.example) embed.addField('Example', command.example)
     }
 
-    embed.setDescription(message.join('\n\n'))
+    embed.setDescription(description.join('\n\n'))
 
-    msg.channel.send(embed)
+    message.channel.send(embed)
   }
 }
 
 const clear: Command = {
   name: 'clear',
   aliases: ['c'],
-  description: 'Delete specified previous messages',
+  description: 'Delete previous messages',
   usage: '$clear [limit]',
   example: '$clear 7',
-  run: (msg, embed, msgCommands) => {
-    const message: string[] = []
+  run: (message, embed, msgCommands) => {
+    const description: string[] = []
     const limit = msgCommands[1]
 
-    if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
-      message.push(':red_circle: You not have permission to run this command')
+    if (!message.member.hasPermission('MANAGE_MESSAGES')) {
+      description.push(':red_circle: You not have permission to run this command')
       embed.setColor('#E81010')
     } else if (!limit || Number(limit) < 2 || isNaN(Number(limit))) {
-      message.push(':nazar_amulet: You not informed a valid value')
-      message.push(':nazar_amulet: Use ***** to clear all messages')
+      description.push(':nazar_amulet: You not informed a valid value')
+      description.push(':nazar_amulet: Use ***** to clear all messages')
     } else {
-      msg.channel.messages.fetch({ limit: limit === '*' ? undefined : Number(limit) })
-        .then(message => msg.channel.bulkDelete(message))
+      message.channel.messages.fetch({ limit: limit === '*' ? undefined : Number(limit) })
+        .then(messageToDelete => message.channel.bulkDelete(messageToDelete))
 
-      message.push(`:nazar_amulet: <@${msg.author.id}> has deleted ${limit === '*' ? 'all' : limit} messages`)
+      description.push(`:nazar_amulet: <@${message.author.id}> has deleted ${limit === '*' ? 'all' : limit} descriptions`)
     }
 
-    embed.setDescription(message.join('\n\n'))
+    embed.setDescription(description.join('\n\n'))
 
-    msg.channel.send(embed)
+    message.channel.send(embed)
   }
 }
 
@@ -65,15 +65,15 @@ const ping: Command = {
   aliases: ['p'],
   description: 'Show bot ping in milliseconds on send message',
   usage: '$ping',
-  run: (msg, embed, msgCommands) => {
-    const message: string[] = []
+  run: (message, embed, msgCommands) => {
+    const description: string[] = []
 
-    message.push(':ping_pong: Pong!')
-    message.push(`:nazar_amulet: **${Date.now() - msg.createdTimestamp}ms**`)
+    description.push(':ping_pong: Pong!')
+    description.push(`:nazar_amulet: **${Date.now() - message.createdTimestamp}ms**`)
 
-    embed.setDescription(message.join('\n\n'))
+    embed.setDescription(description.join('\n\n'))
 
-    msg.channel.send(embed)
+    message.channel.send(embed)
   }
 }
 
@@ -83,8 +83,8 @@ const userinformation: Command = {
   description: 'Show information about you or user mentioned',
   usage: '$userinfo [user mention or empty for you]',
   example: '$userinfo @Atlas',
-  run: (msg, embed, msgCommands) => {
-    const user = msg.mentions.users.first() || msg.author
+  run: (message, embed, msgCommands) => {
+    const user = message.mentions.users.first() || message.author
 
     const userInformation: UserInformation = {
       tag: user.tag,
@@ -92,8 +92,8 @@ const userinformation: Command = {
       status: user.presence.status,
       isBot: user.bot ? 'Yes' : 'No',
       createAccount: user.createdAt.toUTCString(),
-      joined: msg.guild.members.resolve(user.id).joinedAt.toUTCString(),
-      roles: msg.guild.members.resolve(user.id).roles.cache,
+      joined: message.guild.members.resolve(user.id).joinedAt.toUTCString(),
+      roles: message.guild.members.resolve(user.id).roles.cache,
       id: user.id
     }
 
@@ -113,7 +113,7 @@ const userinformation: Command = {
       })())
       .setFooter(`ID: ${userInformation.id}`)
 
-    msg.channel.send(embed)
+    message.channel.send(embed)
   }
 }
 
@@ -122,20 +122,20 @@ const serverinformation: Command = {
   aliases: ['serverinfo', 'svinfo'],
   description: 'Show information about this server',
   usage: '$serverinformation',
-  run: (msg, embed, msgCommands) => {
+  run: (message, embed, msgCommands) => {
     const serverInformation: ServerInformation = {
-      name: msg.guild.name,
-      icon: msg.guild.iconURL(),
-      ownerNickname: msg.guild.owner.user.tag,
-      created: msg.guild.createdAt.toUTCString(),
-      region: msg.guild.region,
-      members: msg.guild.memberCount,
+      name: message.guild.name,
+      icon: message.guild.iconURL(),
+      ownerNickname: message.guild.owner.user.tag,
+      created: message.guild.createdAt.toUTCString(),
+      region: message.guild.region,
+      members: message.guild.memberCount,
       channels: (() => {
-        const existingChannels = msg.guild.channels.cache.filter(channel => channel.deleted === false && channel.type !== 'category')
+        const existingChannels = message.guild.channels.cache.filter(channel => channel.deleted === false && channel.type !== 'category')
         return existingChannels.size
       })(),
-      premiumSubscriptionCount: msg.guild.premiumSubscriptionCount,
-      id: msg.guild.id
+      premiumSubscriptionCount: message.guild.premiumSubscriptionCount,
+      id: message.guild.id
     }
 
     embed
@@ -150,7 +150,7 @@ const serverinformation: Command = {
       .addField('Premium Subscription Count', serverInformation.premiumSubscriptionCount)
       .setFooter(`ID: ${serverInformation.id}`)
 
-    msg.channel.send(embed)
+    message.channel.send(embed)
   }
 }
 

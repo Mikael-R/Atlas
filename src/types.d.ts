@@ -9,7 +9,7 @@ export type CreateEmbed = (
   { title?: string, color?: string }
 ) => Discord.MessageEmbed
 
-export type InvalidCommand = (msg: Discord.Message, embed: Discord.MessageEmbed, msgCommands: string[]) => void
+export type InvalidCommand = (message: Discord.Message, embed: Discord.MessageEmbed, msgCommands: string[]) => void
 
 export type Command = {
   name: string
@@ -18,7 +18,7 @@ export type Command = {
   usage: string
   example?: string
   run: (
-    msg: Discord.Message,
+    message: Discord.Message,
     embed: Discord.MessageEmbed,
     msgCommands: string[]
     ) => void
@@ -47,6 +47,4 @@ export type ServerInformation = {
   id: string
 }
 
-export type AddedOnServer = (embed: Discord.MessageEmbed, ownerNickname: string, serverName: string) => Discord.MessageEmbed
-
-export type RemovedOnServer = (embed: Discord.MessageEmbed, ownerNickname: string, serverName: string) => Discord.MessageEmbed
+export type OnServer = (guild: Discord.Guild, embed: Discord.MessageEmbed) => void
