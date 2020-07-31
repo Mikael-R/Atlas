@@ -1,23 +1,35 @@
+import * as Commands from '@service/commands'
+
 import { Command, UserInformation, ServerInformation } from 'src/types'
 
-// const help: Command = {
-//   name: 'help',
-//   aliases: ['h'],
-//   description: 'Show commands or more information about specific command',
-//   usage: '$help [command or empty to view list]',
-//   example: '$help ping',
-//   run: (msg, embed, msgCommand) => {
-//     const message: string[] = []
+const help: Command = {
+  name: 'help',
+  aliases: ['h'],
+  description: 'Show commands or more information about specific command',
+  usage: '$help [command or empty to view list]',
+  example: '$help ping',
+  run: (msg, embed, msgCommands) => {
+    const message: string[] = []
 
-//     message.push(':nazar_amulet: Use ``$help [command]`` to view more information about specific command')
+    const command: Command = Commands.default.filter(cmd => cmd.name === msgCommands[1] || cmd.aliases.indexOf(msgCommands[1]) !== -1)[0]
 
-//     embed.addField('', '')
+    if (!command) {
+      message.push(':nazar_amulet: Use ``$help [command]`` to view more information about specific command')
 
-//     embed.setDescription(message.join('\n\n'))
+      Commands.default.map(cmd => embed.addField(cmd.name, cmd.description))
+    } else {
+      embed.addField('Name', command.name)
+      embed.addField('Aliases', command.aliases.toString())
+      embed.addField('Description', command.description)
+      embed.addField('Usage', command.usage)
+      if (command.example) embed.addField('Example', command.example)
+    }
 
-//     msg.channel.send(embed)
-//   }
-// }
+    embed.setDescription(message.join('\n\n'))
+
+    msg.channel.send(embed)
+  }
+}
 
 const clear: Command = {
   name: 'clear',
@@ -140,6 +152,7 @@ const serverinformation: Command = {
 }
 
 const serviceCommands = [
+  help,
   clear,
   ping,
   userinformation,
