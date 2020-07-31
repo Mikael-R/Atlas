@@ -1,82 +1,33 @@
-import Discord from 'discord.js'
+import { Command, UserInformation, ServerInformation } from 'src/types'
 
-import {
-  Command, RandomizeStatus, Status, CreateEmbed, InvalidCommand, Ping, Clear,
-  GetUserInformation, GetServerInformation, UserInformation, ServerInformation,
-  Help, AddedOnServer, RemovedOnServer
-} from 'src/types'
+// const help: Command = {
+//   name: 'help',
+//   aliases: ['h'],
+//   description: 'Show commands or more information about specific command',
+//   usage: '$help [command or empty to view list]',
+//   example: '$help ping',
+//   run: (msg, embed, msgCommand) => {
+//     const message: string[] = []
 
-import randInt from '@utils/randInt'
+//     message.push(':nazar_amulet: Use ``$help [command]`` to view more information about specific command')
 
-export const randomizeStatus: RandomizeStatus = (client) => {
-  const status: Status = [
-    { type: 'LISTENING', name: '$help' },
-    { type: 'PLAYING', name: 'stone on the moon' },
-    { type: 'STREAMING', name: 'love and happy' },
-    { type: 'WATCHING', name: `${client.channels.cache.size} channels` }
-  ]
+//     embed.addField('', '')
 
-  const index = randInt(0, status.length + 1)
+//     embed.setDescription(message.join('\n\n'))
 
-  client.user.setActivity(status[index])
-}
+//     msg.channel.send(embed)
+//   }
+// }
 
-export const createEmbed: CreateEmbed = ({ title = '', color }) => {
-  const embed = new Discord.MessageEmbed()
-    .setTitle(title)
-    .setColor(color)
-
-  return embed
-}
-
-export const invalidCommand: InvalidCommand = (embed, command) => {
-  const message: string[] = []
-
-  message.push(`:red_circle: Invalid command ${command ? `**${command}**` : ''}`)
-  message.push(':red_circle: Use **$help** to view command list')
-
-  embed.setColor('#E81010')
-  embed.setDescription(message.join('\n\n'))
-
-  return embed
-}
-
-export const help: Command<Help> = {
-  aliases: ['help', 'h'],
-  description: 'Show commands or more information about specific command',
-  usage: '$help [command or empty to view list]',
-  example: '$help ping',
-  run: (embed, command) => {
-    const message: string[] = []
-
-    if (!command) {
-      message.push(':nazar_amulet: Use ``$help [command]`` to view more information about specific command')
-
-      embed.addField('$ping', 'Show bot and API ping in milliseconds')
-      embed.addField('$clear', 'Delete specified previous messages')
-      embed.addField('$userinformation', 'Show information about you or user mentioned')
-      embed.addField('$serverinformation', 'Show information about this server')
-    } else {
-      embed.addField('Command', command.aliases[0])
-      embed.addField('Aliases', command.aliases.toString())
-      embed.addField('Description', command.description)
-      embed.addField('Usage', command.usage)
-      if (command.example) embed.addField('Example', command.example)
-    }
-
-    embed.setDescription(message.join('\n\n'))
-
-    return embed
-  }
-}
-
-export const clear: Command<Clear> = {
-  aliases: ['clear', 'c'],
+const clear: Command = {
+  name: 'clear',
+  aliases: ['c'],
   description: 'Delete specified previous messages',
   usage: '$clear [limit]',
   example: '$clear 7',
-  run: (embed, msg, limit) => {
+  run: (msg, embed, msgCommands) => {
     const message: string[] = []
+    const limit = msgCommands[1]
 
     if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
       message.push(':red_circle: You not have permission to run this command')
@@ -93,33 +44,34 @@ export const clear: Command<Clear> = {
 
     embed.setDescription(message.join('\n\n'))
 
-    return embed
+    msg.channel.send(embed)
   }
 }
 
-export const ping: Command<Ping> = {
-  aliases: ['ping', 'p'],
-  description: 'Delete specified previous messages',
+const ping: Command = {
+  name: 'ping',
+  aliases: ['p'],
+  description: 'Show bot ping in milliseconds on send message',
   usage: '$ping',
-  run: (embed, ws, msg) => {
+  run: (msg, embed, msgCommands) => {
     const message: string[] = []
 
     message.push(':ping_pong: Pong!')
-    message.push(`:nazar_amulet: Server: ${Date.now() - msg.createdTimestamp}ms`)
-    message.push(`:nazar_amulet: Api: ${ws.ping}ms`)
+    message.push(`:nazar_amulet: **${Date.now() - msg.createdTimestamp}ms**`)
 
     embed.setDescription(message.join('\n\n'))
 
-    return embed
+    msg.channel.send(embed)
   }
 }
 
-export const getUserInformation: Command<GetUserInformation> = {
-  aliases: ['userinformation', 'userinfo', 'usinfo'],
+const userinformation: Command = {
+  name: 'userinformation',
+  aliases: ['userinfo', 'usinfo'],
   description: 'Show information about you or user mentioned',
   usage: '$userinfo [user mention or empty for you]',
   example: '$userinfo @Atlas',
-  run: (embed, msg) => {
+  run: (msg, embed, msgCommands) => {
     const user = msg.mentions.users.first() || msg.author
 
     const userInformation: UserInformation = {
@@ -149,26 +101,28 @@ export const getUserInformation: Command<GetUserInformation> = {
       })())
       .setFooter(`ID: ${userInformation.id}`)
 
-    return embed
+    msg.channel.send(embed)
   }
 }
 
-export const getServerInformation: Command<GetServerInformation> = {
-  aliases: ['serverinformation', 'serverinfo', 'svinfo'],
+const serverinformation: Command = {
+  name: 'serverinformation',
+  aliases: ['serverinfo', 'svinfo'],
   description: 'Show information about this server',
   usage: '$serverinformation',
-  run: (embed, guild) => {
+  run: (msg, embed, msgCommands) => {
     const serverInformation: ServerInformation = {
-      name: guild.name,
-      icon: guild.iconURL(),
-      ownerNickname: guild.owner.user.tag,
-      created: guild.createdAt.toUTCString(),
-      region: guild.region,
-      members: guild.memberCount,
-      channels: guild.channels.cache.size,
-      premiumSubscriptionCount: guild.premiumSubscriptionCount,
-      id: guild.id
+      name: msg.guild.name,
+      icon: msg.guild.iconURL(),
+      ownerNickname: msg.guild.owner.user.tag,
+      created: msg.guild.createdAt.toUTCString(),
+      region: msg.guild.region,
+      members: msg.guild.memberCount,
+      channels: msg.guild.channels.cache.size,
+      premiumSubscriptionCount: msg.guild.premiumSubscriptionCount,
+      id: msg.guild.id
     }
+
     embed
       .setTitle('')
       .setAuthor(serverInformation.name)
@@ -181,31 +135,15 @@ export const getServerInformation: Command<GetServerInformation> = {
       .addField('Premium Subscription Count', serverInformation.premiumSubscriptionCount)
       .setFooter(`ID: ${serverInformation.id}`)
 
-    return embed
+    msg.channel.send(embed)
   }
 }
 
-export const addedOnServer: AddedOnServer = (embed, ownerNickname, serverName) => {
-  const message: string[] = []
+const serviceCommands = [
+  clear,
+  ping,
+  userinformation,
+  serverinformation
+]
 
-  message.push(`:robot: Hello **${ownerNickname}**`)
-  message.push(`:blue_heart: Thanks for add me on **${serverName}**`)
-  message.push(':wrench: Access https://mikael-r.github.io/Atlas to view my commands')
-
-  embed.setDescription(message.join('\n\n'))
-
-  return embed
-}
-
-export const removedOnServer: RemovedOnServer = (embed, ownerNickname, serverName) => {
-  const message: string[] = []
-
-  message.push(`:robot: Hello **${ownerNickname}**`)
-  message.push(`:broken_heart: I was removed from server **${serverName}** and I expect helped you`)
-  message.push(':leaves: Information about you server will be saved for 7 days, in case you add me again')
-  message.push(':wrench: Access https://mikael-r.github.io/Atlas to view my commands')
-
-  embed.setDescription(message.join('\n\n'))
-
-  return embed
-}
+export default serviceCommands

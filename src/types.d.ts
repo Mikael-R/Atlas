@@ -9,34 +9,20 @@ export type CreateEmbed = (
   { title?: string, color?: string }
 ) => Discord.MessageEmbed
 
-export type InvalidCommand = (embed: Discord.MessageEmbed, command: string) => Discord.MessageEmbed
+export type InvalidCommand = (msg: Discord.Message, embed: Discord.MessageEmbed, msgCommands: string[]) => void
 
-export type Command<Run extends Function> = {
+export type Command = {
+  name: string
   aliases: string[]
   description: string
   usage: string
   example?: string
-  run: Run
-}
-
-export type Help = (embed: Discord.MessageEmbed, command: Command<Function>) => Discord.MessageEmbed
-
-export type Clear = (
-  (embed: DiscordMessageEmbed, msg: Discord.Message, limit: string) => Discord.MessageEmbed
-)
-
-export type Ping = (
-  (
+  run: (
+    msg: Discord.Message,
     embed: Discord.MessageEmbed,
-    ws: Discord.WebSocketManager,
-    msg: Discord.Message
-  )
-    => Discord.MessageEmbed
-)
-
-export type GetUserInformation = (
-  (embed: Discord.MessageEmbed, msg: Discord.Message) => Discord.MessageEmbed
-)
+    msgCommands: string[]
+    ) => void
+}
 
 export type UserInformation = {
   tag: string
@@ -48,10 +34,6 @@ export type UserInformation = {
   roles: Discord.Collection<string, Discord.Role>
   id: string
 }
-
-export type GetServerInformation = (
-  (embed: Discord.MessageEmbed, guild: Discord.Guild) => Discord.MessageEmbed
-)
 
 export type ServerInformation = {
   name: string
