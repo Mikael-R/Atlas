@@ -130,7 +130,10 @@ const serverinformation: Command = {
       created: msg.guild.createdAt.toUTCString(),
       region: msg.guild.region,
       members: msg.guild.memberCount,
-      channels: msg.guild.channels.cache.size,
+      channels: (() => {
+        const existingChannels = msg.guild.channels.cache.filter(channel => channel.deleted === false && channel.type !== 'category')
+        return existingChannels.size
+      })(),
       premiumSubscriptionCount: msg.guild.premiumSubscriptionCount,
       id: msg.guild.id
     }
@@ -143,7 +146,7 @@ const serverinformation: Command = {
       .addField('Created', serverInformation.created)
       .addField('Region', serverInformation.region, true)
       .addField('Members', serverInformation.members, true)
-      .addField('Channels', serverInformation.channels, true)
+      .addField('Channels', (serverInformation.channels), true)
       .addField('Premium Subscription Count', serverInformation.premiumSubscriptionCount)
       .setFooter(`ID: ${serverInformation.id}`)
 
