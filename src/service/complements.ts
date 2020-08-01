@@ -42,7 +42,7 @@ export const testCallingCommand: TestCallingCommand = (embed, command, messageAr
       description.push(`:red_circle: **${command.usage}**`)
     }
 
-    const needPermissions = command.permissions.filter(perm => userPermissions.indexOf(perm) === -1)
+    const needPermissions = command.permissions ? command.permissions.filter(perm => userPermissions.indexOf(perm) === -1) : []
 
     if (needPermissions.length) {
       description.push(`:red_circle: Need permissions: ${needPermissions.toString().split('_').join(' ')}`)

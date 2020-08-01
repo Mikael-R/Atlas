@@ -1,10 +1,12 @@
 import Discord from 'discord.js'
 import 'dotenv/config'
 
-import serviceCommands from '@service/commands'
+import serviceCommands from '@service/commands/__index__'
 import * as serviceComplements from '@service/complements'
 
 const client = new Discord.Client()
+
+// serviceCommands.map(command => console.log(`"${command.name}" not have erros`))
 
 client.on('ready', () => {
   setInterval(() => serviceComplements.randomizeStatus(client), 12000)
