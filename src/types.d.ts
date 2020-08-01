@@ -9,20 +9,26 @@ export type CreateEmbed = (
   { title?: string, color?: string }
 ) => Discord.MessageEmbed
 
-export type InvalidCommand = (message: Discord.Message, embed: Discord.MessageEmbed, msgCommands: string[]) => void
-
 export type Command = {
   name: string
   aliases: string[]
   description: string
+  permissions?: Discord.PermissionString[]
+  minArguments: number
   usage: string
   example?: string
   run: (
     message: Discord.Message,
     embed: Discord.MessageEmbed,
-    msgCommands: string[]
-    ) => void
+    messageArgs: string[]
+    ) => Discord.MessageEmbed
 }
+
+export type CallingCommand = (message: Discord.Message, messageArgs: string[]) => boolean
+
+export type TestCallingCommand = (
+  embed: Discord.MessageEmbed, command: Command, messageArgs: string[], userPermissions: Discord.PermissionString[]
+  ) => { embed: Discord.MessageEmbed, passed: boolean }
 
 export type UserInformation = {
   tag: string
@@ -47,4 +53,4 @@ export type ServerInformation = {
   id: string
 }
 
-export type OnServer = (guild: Discord.Guild, embed: Discord.MessageEmbed) => void
+export type OnServer = (embed: Discord.MessageEmbed, ownerName: string, serverName: string) => Discord.messageEmbed

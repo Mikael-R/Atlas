@@ -15,7 +15,7 @@ client.on('ready', () => {
 client.on('guildCreate', guild => {
   const embed = serviceComplements.createEmbed({ color: '#1213BD' })
 
-  serviceComplements.addedOnServer(guild, embed)
+  guild.owner.send(serviceComplements.addedOnServer(embed, guild.owner.displayName, guild.name))
 
   console.log(`> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`)
 })
@@ -23,30 +23,29 @@ client.on('guildCreate', guild => {
 client.on('guildDelete', guild => {
   const embed = serviceComplements.createEmbed({ color: '#1213BD' })
 
-  serviceComplements.addedOnServer(guild, embed)
+  guild.owner.send(serviceComplements.addedOnServer(embed, guild.owner.displayName, guild.name))
 
   console.log(`> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`)
 })
 
 client.on('message', message => {
-  const msgCommands = message.content
+  const messageArgs = message.content
     .replace(/\s{2,}/g, ' ')
     .split(' ')
 
-  if (msgCommands[0][0] !== '$' || msgCommands[0] === '$' || message.channel.type === 'dm' || message.author.bot) {
-    return
-  }
+  if (!serviceComplements.callingCommand(message, messageArgs)) return
 
-  msgCommands[0] = msgCommands[0].slice(1) // remove flag (one character)
+  messageArgs[0] = messageArgs[0].slice(1) // remove flag $ (one character)
 
   const embed = serviceComplements.createEmbed({ title: message.guild.name, color: '#1213BD' })
 
-  const command = serviceCommands.filter(cmd => cmd.name === msgCommands[0] || cmd.aliases.indexOf(msgCommands[0]) !== -1)[0]
+  const command = serviceCommands.filter(cmd => cmd.name === messageArgs[0] || cmd.aliases.indexOf(messageArgs[0]) !== -1)[0]
+  const testCallingCommand = serviceComplements.testCallingCommand(embed, command, messageArgs, message.guild.members.resolve(message.author.id).permissions.toArray())
 
-  if (command) {
-    command.run(message, embed, msgCommands)
+  if (testCallingCommand.passed) {
+    message.channel.send(command.run(message, embed, messageArgs))
   } else {
-    serviceComplements.invalidCommand(message, embed, msgCommands)
+    message.channel.send(testCallingCommand.embed)
   }
 })
 
