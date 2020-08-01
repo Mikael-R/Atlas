@@ -1,4 +1,4 @@
-import * as Commands from '@service/commands/__index__'
+import * as Commands from '@commands/__index__'
 
 import { Command } from 'src/types'
 

@@ -16,7 +16,8 @@ module.exports = {
       {
         alias: {
           '@service': './src/service',
-          '@utils': './src/utils'
+          '@utils': './src/utils',
+          '@commands': './src/commands'
         }
       }
     ]

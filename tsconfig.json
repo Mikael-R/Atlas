@@ -22,7 +22,8 @@
     "baseUrl": ".",
     "paths": {
       "@service/*": ["./src/service/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@commands/*": ["./src/commands/*"],
     }
   },
   "include": [
