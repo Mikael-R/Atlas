@@ -10,12 +10,14 @@ const ping: Command = {
     const description = []
 
     description.push(':ping_pong: Pong!')
-    description.push(`:nazar_amulet: **${Date.now() - message.createdTimestamp}ms**`)
+    description.push(
+      `:nazar_amulet: **${Date.now() - message.createdTimestamp}ms**`
+    )
 
     embed.setDescription(description.join('\n\n'))
 
     return embed
-  }
+  },
 }
 
 export default ping

@@ -1,6 +1,4 @@
-type RandInt = (mix: number, max: number) => number
-
-const randInt: RandInt = (min, max) => {
+const randInt = (min: number, max: number) => {
   min = Math.ceil(min)
   max = Math.floor(max)
 

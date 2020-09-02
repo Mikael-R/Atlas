@@ -1,47 +1,56 @@
-import Discord from 'discord.js'
+import {
+  MessageEmbedOptions,
+  MessageEmbed,
+  PermissionString,
+  Message,
+  Collection,
+  Role,
+} from 'discord.js'
 
-export type RandomizeStatus = (client: Discord.Client) => void
+export interface CreateEmbed {
+  (options: MessageEmbedOptions): MessageEmbed
+}
 
-export type Status = Discord.ActivityOptions[]
-
-export type CreateEmbed = (
-  { title, color }:
-  { title?: string, color?: string }
-) => Discord.MessageEmbed
-
-export type Command = {
+export interface Command {
   name: string
   aliases: string[]
   description: string
-  permissions?: Discord.PermissionString[]
+  permissions?: PermissionString[]
   minArguments: number
   usage: string
   example?: string
   run: (
-    message: Discord.Message,
-    embed: Discord.MessageEmbed,
+    message: Message,
+    embed: MessageEmbed,
     messageArgs: string[]
-    ) => Discord.MessageEmbed
+  ) => MessageEmbed
 }
 
-export type CallingCommand = (message: Discord.Message, messageArgs: string[]) => boolean
+export interface IsCall {
+  (message: Message, messageArgs: string[]): boolean
+}
 
-export type TestCallingCommand = (
-  embed: Discord.MessageEmbed, command: Command, messageArgs: string[], userPermissions: Discord.PermissionString[]
-  ) => { embed: Discord.MessageEmbed, passed: boolean }
+export interface IsValidCall {
+  (
+    embed: MessageEmbed,
+    command: Command,
+    messageArgs: string[],
+    userPermissions: PermissionString[]
+  ): { embed: MessageEmbed; passed: boolean }
+}
 
-export type UserInformation = {
+export interface UserInformation {
   tag: string
   avatar: string
   status: string
-  isBot: string
+  isBot: boolean
   createAccount: string
   joined: string
-  roles: Discord.Collection<string, Discord.Role>
+  roles: Collection<string, Role>
   id: string
 }
 
-export type ServerInformation = {
+export interface ServerInformation {
   name: string
   icon: string
   members: number
@@ -53,4 +62,6 @@ export type ServerInformation = {
   id: string
 }
 
-export type OnServer = (embed: Discord.MessageEmbed, ownerName: string, serverName: string) => Discord.messageEmbed
+export interface OnServer {
+  (embed: MessageEmbed, ownerName: string, serverName: string): MessageEmbed
+}

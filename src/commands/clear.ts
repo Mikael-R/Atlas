@@ -16,16 +16,19 @@ const clear: Command = {
       description.push(':nazar_amulet: You not informed a valid value')
       description.push(':nazar_amulet: Use numbers more than 1')
     } else {
-      message.channel.messages.fetch({ limit: limit })
+      message.channel.messages
+        .fetch({ limit: limit })
         .then(messageToDelete => message.channel.bulkDelete(messageToDelete))
 
-      description.push(`:nazar_amulet: <@${message.author.id}> has deleted ${limit} messages`)
+      description.push(
+        `:nazar_amulet: <@${message.author.id}> has deleted ${limit} messages`
+      )
     }
 
     embed.setDescription(description.join('\n\n'))
 
     return embed
-  }
+  },
 }
 
 export default clear

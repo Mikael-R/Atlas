@@ -15,11 +15,13 @@ const serverinformation: Command = {
       region: message.guild.region,
       members: message.guild.memberCount,
       channels: (() => {
-        const existingChannels = message.guild.channels.cache.filter(channel => channel.deleted === false && channel.type !== 'category')
+        const existingChannels = message.guild.channels.cache.filter(
+          channel => channel.deleted === false && channel.type !== 'category'
+        )
         return existingChannels.size
       })(),
       premiumSubscriptionCount: message.guild.premiumSubscriptionCount,
-      id: message.guild.id
+      id: message.guild.id,
     }
 
     embed
@@ -30,12 +32,15 @@ const serverinformation: Command = {
       .addField('Created', serverInformation.created)
       .addField('Region', serverInformation.region, true)
       .addField('Members', serverInformation.members, true)
-      .addField('Channels', (serverInformation.channels), true)
-      .addField('Premium Subscription Count', serverInformation.premiumSubscriptionCount)
+      .addField('Channels', serverInformation.channels, true)
+      .addField(
+        'Premium Subscription Count',
+        serverInformation.premiumSubscriptionCount
+      )
       .setFooter(`ID: ${serverInformation.id}`)
 
     return embed
-  }
+  },
 }
 
 export default serverinformation

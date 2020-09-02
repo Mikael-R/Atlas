@@ -1,51 +1,67 @@
-import Discord from 'discord.js'
 import 'dotenv/config'
 
-import commands from '@commands/__index__'
-import * as complements from '@service/complements'
+import commands from '@commands/index'
+import createEmbed from '@tools/createEmbed'
+import onCallCommand from '@tools/onCallCommand'
+import onServer from '@tools/onServer'
+import randomizeStatus from '@tools/randomizeStatus'
+import { Client } from 'discord.js'
 
-const client = new Discord.Client()
+const client = new Client()
 
 client.on('ready', () => {
-  setInterval(() => complements.randomizeStatus(client), 12000)
+  setInterval(() => randomizeStatus(client), 12000)
 
   console.log(`> Started: ${client.user.tag}`)
 })
 
 client.on('guildCreate', guild => {
-  const embed = complements.createEmbed({ color: '#1213BD' })
+  const embed = createEmbed({ color: '#1213BD' })
 
-  guild.owner.send(complements.addedOnServer(embed, guild.owner.displayName, guild.name))
+  guild.owner.send(onServer.added(embed, guild.owner.displayName, guild.name))
 
-  console.log(`> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`)
+  console.log(
+    `> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`
+  )
 })
 
 client.on('guildDelete', guild => {
-  const embed = complements.createEmbed({ color: '#1213BD' })
+  const embed = createEmbed({ color: '#1213BD' })
 
-  guild.owner.send(complements.addedOnServer(embed, guild.owner.displayName, guild.name))
+  guild.owner.send(onServer.removed(embed, guild.owner.displayName, guild.name))
 
-  console.log(`> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`)
+  console.log(
+    `> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`
+  )
 })
 
 client.on('message', message => {
-  const messageArgs = message.content
-    .replace(/\s{2,}/g, ' ')
-    .split(' ')
+  const messageArgs = message.content.replace(/\s{2,}/g, ' ').split(' ')
 
-  if (!complements.callingCommand(message, messageArgs)) return
+  if (!onCallCommand.isCall(message, messageArgs)) return
 
-  messageArgs[0] = messageArgs[0].slice(1) // remove flag $ (one character)
+  messageArgs[0] = messageArgs[0].replace('$', '')
 
-  const embed = complements.createEmbed({ title: message.guild.name, color: '#1213BD' })
+  const embed = createEmbed({
+    title: message.guild.name,
+    color: '#1213BD',
+  })
 
-  const command = commands.filter(cmd => cmd.name === messageArgs[0] || cmd.aliases.indexOf(messageArgs[0]) !== -1)[0]
-  const testCallingCommand = complements.testCallingCommand(embed, command, messageArgs, message.guild.members.resolve(message.author.id).permissions.toArray())
+  const command = commands.filter(
+    cmd => cmd.name === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
+  )[0]
 
-  if (testCallingCommand.passed) {
+  const isValidCallCommand = onCallCommand.isValidCall(
+    embed,
+    command,
+    messageArgs,
+    message.guild.members.resolve(message.author.id).permissions.toArray()
+  )
+
+  if (isValidCallCommand.passed) {
     message.channel.send(command.run(message, embed, messageArgs))
   } else {
-    message.channel.send(testCallingCommand.embed)
+    message.channel.send(isValidCallCommand.embed)
   }
 })
 
