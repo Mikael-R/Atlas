@@ -15,11 +15,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
-    "paths": {
-      "@commands/*": ["./src/commands/*"],
-      "@tools/*": ["./src/tools/*"],
-      "@utils/*": ["./src/utils/*"]
-    }
+    "paths": {}
   },
   "include": ["./src/**/*"]
 }

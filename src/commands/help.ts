@@ -1,5 +1,5 @@
-import * as Commands from '@commands/index'
-import { Command } from 'src/types'
+import { Command } from '../types'
+import * as Commands from './index'
 
 const help: Command = {
   name: 'help',

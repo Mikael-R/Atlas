@@ -1,11 +1,12 @@
 import 'dotenv/config'
 
-import commands from '@commands/index'
-import createEmbed from '@tools/createEmbed'
-import onCallCommand from '@tools/onCallCommand'
-import onServer from '@tools/onServer'
-import randomizeStatus from '@tools/randomizeStatus'
 import { Client } from 'discord.js'
+
+import commands from './commands/index'
+import createEmbed from './tools/createEmbed'
+import onCallCommand from './tools/onCallCommand'
+import onServer from './tools/onServer'
+import randomizeStatus from './tools/randomizeStatus'
 
 const client = new Client()
 

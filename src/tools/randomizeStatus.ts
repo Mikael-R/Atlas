@@ -1,5 +1,6 @@
-import randInt from '@utils/randInt'
 import { Client, ActivityOptions } from 'discord.js'
+
+import randInt from '../utils/randInt'
 
 const randomizeStatus = (client: Client) => {
   const status: ActivityOptions[] = [

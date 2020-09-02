@@ -1,5 +1,6 @@
 import { readdirSync } from 'fs'
-import { Command } from 'src/types'
+
+import { Command } from '../types'
 
 const commands: Command[] = []
 const exclude = ['index.ts', 'index.js']

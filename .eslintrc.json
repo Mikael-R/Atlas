@@ -15,7 +15,7 @@
     "prettier",
     "eslint-plugin-import-helpers"
   ],
-  "ignorePatterns": ["*/build/**"],
+  "ignorePatterns": ["build/"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],

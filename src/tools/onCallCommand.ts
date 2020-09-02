@@ -1,4 +1,4 @@
-import { IsCall, IsValidCall } from 'src/types'
+import { IsCall, IsValidCall } from '../types'
 
 const isCall: IsCall = (message, messageArgs) => {
   return !(

@@ -1,4 +1,4 @@
-import { OnServer } from 'src/types'
+import { OnServer } from '../types'
 
 const added: OnServer = (embed, ownerName, serverName) => {
   const description: string[] = []

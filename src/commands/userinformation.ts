@@ -1,4 +1,4 @@
-import { Command, UserInformation } from 'src/types'
+import { Command, UserInformation } from '../types'
 
 const userinformation: Command = {
   name: 'userinformation',
