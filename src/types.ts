@@ -19,11 +19,15 @@ export interface Command {
   minArguments: number
   usage: string
   example?: string
-  run: (
-    message: Message,
-    embed: MessageEmbed,
+  run: ({
+    message,
+    embed,
+    messageArgs,
+  }: {
+    message: Message
+    embed: MessageEmbed
     messageArgs: string[]
-  ) => MessageEmbed
+  }) => MessageEmbed
 }
 
 export interface IsCall {
@@ -31,12 +35,20 @@ export interface IsCall {
 }
 
 export interface IsValidCall {
-  (
-    embed: MessageEmbed,
-    command: Command,
-    messageArgs: string[],
-    userPermissions: PermissionString[]
-  ): { embed: MessageEmbed; passed: boolean }
+  ({
+    embed,
+    command,
+    messageArgs,
+    permissions,
+  }: {
+    embed: MessageEmbed
+    command: Command
+    messageArgs: string[]
+    permissions: {
+      user: PermissionString[]
+      bot: PermissionString[]
+    }
+  }): { embed: MessageEmbed; passed: boolean }
 }
 
 export interface UserInformation {

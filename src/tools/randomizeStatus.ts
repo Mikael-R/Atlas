@@ -13,7 +13,7 @@ const randomizeStatus = (client: Client) => {
     },
   ]
 
-  const index = randInt(0, status.length + 1)
+  const index = randInt(0, status.length)
 
   client.user.setActivity(status[index])
 }

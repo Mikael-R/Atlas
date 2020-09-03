@@ -1,3 +1,5 @@
+import { TextChannel, NewsChannel } from 'discord.js'
+
 import { Command } from '../types'
 
 const clear: Command = {
@@ -8,8 +10,9 @@ const clear: Command = {
   minArguments: 1,
   usage: '$clear [limit]',
   example: '$clear 7',
-  run: (message, embed, messageArgs) => {
+  run: ({ message, embed, messageArgs }) => {
     const description: string[] = []
+
     const limit = Number(messageArgs[1])
 
     if (limit < 2 || isNaN(limit)) {
@@ -18,18 +21,15 @@ const clear: Command = {
     } else {
       message.channel.messages
         .fetch({ limit: limit })
-        .then(messageToDelete => {
-          message.channel.bulkDelete(messageToDelete)
-
-          description.push(
-            `:nazar_amulet: <@${message.author.id}> has deleted ${limit} messages`
+        .then(messageToDelete =>
+          (message.channel as TextChannel | NewsChannel).bulkDelete(
+            messageToDelete
           )
-        })
-        .catch(() => {
-          description.push(':red_circle: I need permission to delete messages')
+        )
 
-          embed.setColor('#E81010')
-        })
+      description.push(
+        `:nazar_amulet: <@${message.author.id}> has deleted ${limit} messages`
+      )
     }
 
     embed.setDescription(description.join('\n\n'))

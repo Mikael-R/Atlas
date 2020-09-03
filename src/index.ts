@@ -52,15 +52,20 @@ client.on('message', message => {
     cmd => cmd.name === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
   )[0]
 
-  const isValidCallCommand = onCallCommand.isValidCall(
+  const isValidCallCommand = onCallCommand.isValidCall({
     embed,
     command,
     messageArgs,
-    message.guild.members.resolve(message.author.id).permissions.toArray()
-  )
+    permissions: {
+      user: message.guild.members
+        .resolve(message.author.id)
+        .permissions.toArray(),
+      bot: message.guild.me.permissions.toArray(),
+    },
+  })
 
   if (isValidCallCommand.passed) {
-    message.channel.send(command.run(message, embed, messageArgs))
+    message.channel.send(command.run({ message, embed, messageArgs }))
   } else {
     message.channel.send(isValidCallCommand.embed)
   }

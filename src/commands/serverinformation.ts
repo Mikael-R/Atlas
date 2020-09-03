@@ -6,7 +6,7 @@ const serverinformation: Command = {
   description: 'Show information about this server',
   minArguments: 0,
   usage: '$serverinformation',
-  run: (message, embed) => {
+  run: ({ message, embed }) => {
     const serverInformation: ServerInformation = {
       name: message.guild.name,
       icon: message.guild.iconURL(),

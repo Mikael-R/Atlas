@@ -9,13 +9,18 @@ const isCall: IsCall = (message, messageArgs) => {
   )
 }
 
-const isValidCall: IsValidCall = (
+const isValidCall: IsValidCall = ({
   embed,
   command,
   messageArgs,
-  userPermissions
-) => {
+  permissions,
+}) => {
   const description: string[] = []
+
+  const needPermissions = (command.permissions && {
+    user: command.permissions.filter(perm => !permissions.user.includes(perm)),
+    bot: command.permissions.filter(perm => !permissions.bot.includes(perm)),
+  }) || { user: [], bot: [] }
 
   if (command) {
     if (messageArgs.length - 1 < command.minArguments) {
@@ -23,18 +28,23 @@ const isValidCall: IsValidCall = (
       description.push(`:red_circle: **${command.usage}**`)
     }
 
-    const needPermissions = command.permissions
-      ? command.permissions.filter(perm => {
-          console.log(userPermissions.includes(perm), perm)
-        })
-      : []
-
-    if (needPermissions.length) {
+    if (needPermissions.user.length) {
       description.push(
-        `:red_circle: Need permissions: ${needPermissions
+        `:red_circle: You need permissions: ${needPermissions.user
           .toString()
-          .split('_')
-          .join(' ')}`
+          .toLowerCase()
+          .replace('_', ' ')
+          .replace(',', ', ')}`
+      )
+    }
+
+    if (needPermissions.bot.length) {
+      description.push(
+        `:red_circle: You need permissions: ${needPermissions.bot
+          .toString()
+          .toLowerCase()
+          .replace('_', ' ')
+          .replace(',', ', ')}`
       )
     }
   } else {

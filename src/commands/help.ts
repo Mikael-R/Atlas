@@ -8,7 +8,7 @@ const help: Command = {
   minArguments: 0,
   usage: '$help [command or empty to view list]',
   example: '$help ping',
-  run: (message, embed, messageArgs) => {
+  run: ({ embed, messageArgs }) => {
     const description: string[] = []
 
     const command: Command = Commands.default.filter(
@@ -23,10 +23,17 @@ const help: Command = {
       Commands.default.map(cmd => embed.addField(cmd.name, cmd.description))
     } else {
       embed.addField('Name', command.name)
-      embed.addField('Aliases', command.aliases.toString())
+      embed.addField('Aliases', command.aliases.toString().replace(',', ', '))
       embed.addField('Description', command.description)
       command.permissions &&
-        embed.addField('Permissions', command.permissions.toString())
+        embed.addField(
+          'Permissions',
+          command.permissions
+            .toString()
+            .toLowerCase()
+            .replace('_', ' ')
+            .replace(',', ', ')
+        )
       embed.addField('Usage', command.usage)
       command.example && embed.addField('Example', command.example)
     }
