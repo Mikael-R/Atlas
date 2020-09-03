@@ -7,7 +7,7 @@ const added: OnServer = (embed, ownerName, serverName) => {
   description.push(`:blue_heart: Thanks for add me on **${serverName}**`)
   description.push(':nazar_amulet: Use $help on server to view my commands')
   description.push(
-    ':mag_right: Access https://mikael-r.github.io/atlas to more information about me'
+    ':mag_right: Access https://mikael-r.github.io/aziris to more information about me'
   )
 
   embed.setDescription(description.join('\n\n'))
@@ -27,7 +27,7 @@ const removed: OnServer = (embed, ownerName, serverName) => {
   )
   description.push(':nazar_amulet: Use $help on server to view my commands')
   description.push(
-    ':mag_left: Access https://mikael-r.github.io/atlas to more information about me'
+    ':mag_left: Access https://mikael-r.github.io/aziris to more information about me'
   )
 
   embed.setDescription(description.join('\n\n'))

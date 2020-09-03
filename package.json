@@ -1,5 +1,5 @@
 {
-  "name": "atlas",
+  "name": "aziris",
   "version": "1.0.0",
   "description": "Discord bot to help a manage you server",
   "main": "build/index.js",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mikael-R/atlas.git"
+    "url": "git+https://github.com/Mikael-R/aziris.git"
   },
   "bugs": {
-    "url": "https://github.com/Mikael-R/atlas/issues"
+    "url": "https://github.com/Mikael-R/aziris/issues"
   },
-  "homepage": "https://github.com/Mikael-R/atlas#readme",
+  "homepage": "https://github.com/Mikael-R/aziris#readme",
   "keywords": [
-    "atlas",
+    "aziris",
     "discord",
     "bot",
     "help"

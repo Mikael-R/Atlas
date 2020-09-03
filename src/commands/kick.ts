@@ -7,7 +7,7 @@ const kick: Command = {
   minArguments: 1,
   permissions: ['KICK_MEMBERS'],
   usage: '$kick [user mention]',
-  example: '$kick @atlas',
+  example: '$kick @aziris',
   run: ({ message, embed }) => {
     const description: string[] = []
 
