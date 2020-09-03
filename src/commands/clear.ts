@@ -2,7 +2,7 @@ import { Command } from '../types'
 
 const clear: Command = {
   name: 'clear',
-  aliases: ['c'],
+  aliases: ['c', 'cls'],
   description: 'Delete previous messages',
   permissions: ['MANAGE_MESSAGES'],
   minArguments: 1,
@@ -18,11 +18,18 @@ const clear: Command = {
     } else {
       message.channel.messages
         .fetch({ limit: limit })
-        .then(messageToDelete => message.channel.bulkDelete(messageToDelete))
+        .then(messageToDelete => {
+          message.channel.bulkDelete(messageToDelete)
 
-      description.push(
-        `:nazar_amulet: <@${message.author.id}> has deleted ${limit} messages`
-      )
+          description.push(
+            `:nazar_amulet: <@${message.author.id}> has deleted ${limit} messages`
+          )
+        })
+        .catch(() => {
+          description.push(':red_circle: I need permission to delete messages')
+
+          embed.setColor('#E81010')
+        })
     }
 
     embed.setDescription(description.join('\n\n'))

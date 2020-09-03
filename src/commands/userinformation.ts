@@ -6,8 +6,8 @@ const userinformation: Command = {
   description: 'Show information about you or user mentioned',
   minArguments: 0,
   usage: '$userinformation [user mention or empty for you]',
-  example: `$userinformation`,
-  run: (message, embed, messageArgs) => {
+  example: '$userinformation @atlas',
+  run: (message, embed) => {
     const user = message.mentions.users.first() || message.author
 
     const userInformation: UserInformation = {
