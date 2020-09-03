@@ -19,20 +19,24 @@ client.on('ready', () => {
 client.on('guildCreate', guild => {
   const embed = createEmbed({ color: '#1213BD' })
 
-  guild.owner.send(onServer.added(embed, guild.owner.displayName, guild.name))
-
   console.log(
     `> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`
+  )
+
+  return guild.owner.send(
+    onServer.added(embed, guild.owner.displayName, guild.name)
   )
 })
 
 client.on('guildDelete', guild => {
   const embed = createEmbed({ color: '#1213BD' })
 
-  guild.owner.send(onServer.removed(embed, guild.owner.displayName, guild.name))
-
   console.log(
     `> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`
+  )
+
+  return guild.owner.send(
+    onServer.removed(embed, guild.owner.displayName, guild.name)
   )
 })
 
@@ -65,9 +69,9 @@ client.on('message', message => {
   })
 
   if (isValidCallCommand.passed) {
-    message.channel.send(command.run({ message, embed, messageArgs }))
+    return message.channel.send(command.run({ message, embed, messageArgs }))
   } else {
-    message.channel.send(isValidCallCommand.embed)
+    return message.channel.send(isValidCallCommand.embed)
   }
 })
 

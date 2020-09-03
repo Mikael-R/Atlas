@@ -15,9 +15,11 @@ const clear: Command = {
 
     const limit = Number(messageArgs[1])
 
-    if (limit < 2 || isNaN(limit)) {
+    if (limit < 2 || limit > 9999 || isNaN(limit)) {
       description.push(':nazar_amulet: You not informed a valid value')
-      description.push(':nazar_amulet: Use numbers more than 1')
+      description.push(
+        ':nazar_amulet: Use numbers ​​greater than 1 and less than 9999'
+      )
     } else {
       message.channel.messages
         .fetch({ limit: limit })
