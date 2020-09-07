@@ -8,7 +8,7 @@ const help: Command = {
   minArguments: 0,
   usage: '$help [command or empty to view list]',
   example: '$help ping',
-  run: ({ embed, messageArgs }) => {
+  run: async ({ embed, messageArgs }) => {
     const description: string[] = []
 
     const command: Command = Commands.default.filter(

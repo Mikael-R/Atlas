@@ -6,7 +6,7 @@ const ping: Command = {
   description: 'Show bot ping in milliseconds on send message',
   minArguments: 0,
   usage: '$ping',
-  run: ({ message, embed }) => {
+  run: async ({ message, embed }) => {
     const description = []
 
     description.push(':ping_pong: Pong!')

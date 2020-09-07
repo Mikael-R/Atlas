@@ -10,7 +10,7 @@ const clear: Command = {
   minArguments: 1,
   usage: '$clear [limit]',
   example: '$clear 7',
-  run: ({ message, embed, messageArgs }) => {
+  run: async ({ message, embed, messageArgs }) => {
     const description: string[] = []
 
     const limit = Number(messageArgs[1])

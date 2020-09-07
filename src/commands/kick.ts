@@ -8,7 +8,7 @@ const kick: Command = {
   permissions: ['KICK_MEMBERS'],
   usage: '$kick [user mention]',
   example: '$kick @aziris',
-  run: ({ message, embed }) => {
+  run: async ({ message, embed }) => {
     const description: string[] = []
 
     const user = message.mentions.users.first()

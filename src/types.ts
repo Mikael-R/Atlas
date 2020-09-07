@@ -27,7 +27,7 @@ export interface Command {
     message: Message
     embed: MessageEmbed
     messageArgs: string[]
-  }) => MessageEmbed
+  }) => Promise<MessageEmbed>
 }
 
 export interface IsCall {

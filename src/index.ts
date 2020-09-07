@@ -23,9 +23,7 @@ client.on('guildCreate', guild => {
     `> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`
   )
 
-  return guild.owner.send(
-    onServer.added(embed, guild.owner.displayName, guild.name)
-  )
+  guild.owner.send(onServer.added(embed, guild.owner.displayName, guild.name))
 })
 
 client.on('guildDelete', guild => {
@@ -35,12 +33,10 @@ client.on('guildDelete', guild => {
     `> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`
   )
 
-  return guild.owner.send(
-    onServer.removed(embed, guild.owner.displayName, guild.name)
-  )
+  guild.owner.send(onServer.removed(embed, guild.owner.displayName, guild.name))
 })
 
-client.on('message', message => {
+client.on('message', async message => {
   const messageArgs = message.content.replace(/\s{2,}/g, ' ').split(' ')
 
   if (!onCallCommand.isCall(message, messageArgs)) return
@@ -69,9 +65,11 @@ client.on('message', message => {
   })
 
   if (isValidCallCommand.passed) {
-    return message.channel.send(command.run({ message, embed, messageArgs }))
+    command
+      .run({ message, embed, messageArgs })
+      .then(embed => message.channel.send(embed))
   } else {
-    return message.channel.send(isValidCallCommand.embed)
+    message.channel.send(isValidCallCommand.embed)
   }
 })
 

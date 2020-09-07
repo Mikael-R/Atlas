@@ -16,48 +16,59 @@ const isValidCall: IsValidCall = ({
   permissions,
 }) => {
   const description: string[] = []
+  const passed: boolean[] = []
 
-  const needPermissions = (command.permissions && {
-    user: command.permissions.filter(perm => !permissions.user.includes(perm)),
-    bot: command.permissions.filter(perm => !permissions.bot.includes(perm)),
-  }) || { user: [], bot: [] }
+  const needPermissions =
+    command && command.permissions
+      ? {
+          user: command.permissions.filter(
+            perm => !permissions.user.includes(perm)
+          ),
+          bot: command.permissions.filter(
+            perm => !permissions.bot.includes(perm)
+          ),
+        }
+      : { user: [], bot: [] }
 
-  if (command) {
-    if (messageArgs.length - 1 < command.minArguments) {
+  switch (true) {
+    case !command:
+      description.push(
+        `:red_circle: Command not exists: ${
+          messageArgs[0] ? `**${messageArgs[0]}**` : ''
+        }`
+      )
+      break
+
+    case !!needPermissions.bot.length:
+      description.push(
+        `:red_circle: I need permissions: ${needPermissions.user
+          .toString()
+          .toLowerCase()
+          .replace('_', ' ')
+          .replace(',', ', ')}`
+      )
+      break
+
+    case !!needPermissions.user.length:
+      description.push(
+        `:red_circle: You need permissions: \`\`${needPermissions.user
+          .toString()
+          .toLowerCase()
+          .replace('_', ' ')
+          .replace(',', ', ')}\`\``
+      )
+      break
+
+    case messageArgs.length - 1 < command.minArguments:
       description.push(':red_circle: Need arguments')
       description.push(`:red_circle: **${command.usage}**`)
-    }
+      break
 
-    if (needPermissions.user.length) {
-      description.push(
-        `:red_circle: You need permissions: ${needPermissions.user
-          .toString()
-          .toLowerCase()
-          .replace('_', ' ')
-          .replace(',', ', ')}`
-      )
-    }
-
-    if (needPermissions.bot.length) {
-      description.push(
-        `:red_circle: You need permissions: ${needPermissions.bot
-          .toString()
-          .toLowerCase()
-          .replace('_', ' ')
-          .replace(',', ', ')}`
-      )
-    }
-  } else {
-    description.push(
-      `:red_circle: Command not exists: ${
-        messageArgs[0] ? `**${messageArgs[0]}**` : ''
-      }`
-    )
+    default:
+      passed.push(true)
   }
 
-  const passed = !description.length
-
-  if (!passed) {
+  if (!passed[0]) {
     description.push(':red_circle: Use **$help** to view command list')
 
     embed.setColor('#E81010')
@@ -65,7 +76,7 @@ const isValidCall: IsValidCall = ({
 
   embed.setDescription(description.join('\n\n'))
 
-  return { passed, embed }
+  return { passed: passed[0], embed }
 }
 
 export default { isCall, isValidCall }
