@@ -4,13 +4,13 @@
 
 [![Forks](https://img.shields.io/github/forks/Mikael-R/aziris?style=social)](https://github.com/Mikael-R/aziris/network/members) [![Stars](https://img.shields.io/github/stars/Mikael-R/aziris?style=social)](https://github.com/Mikael-R/aziris/stargazers) [![Watches](https://img.shields.io/github/watchers/Mikael-R/aziris?style=social)](https://github.com/Mikael-R/aziris/watchers)
 
-[![Author Twitter](https://img.shields.io/twitter/follow/@mikaelr16.svg?style=social)](https://twitter.com/@mikaelr16)
+[![Author Twitter](https://img.shields.io/twitter/follow/mikaelr16.svg?style=social)](https://twitter.com/mikaelr16)
 
 <h1 id="title" align="center">Welcome to aziris 👋</h1>
 
 <h4 align="center"> 🚧 aziris in development... 🚧</h4>
 
-![Logo](https://cdn.discordapp.com/avatars/736626386009194676/e24fce3682fecb948ab541893b8dd9f0.png?size=128)
+<img align="center" src="https://cdn.discordapp.com/avatars/736626386009194676/e24fce3682fecb948ab541893b8dd9f0.png?size=128" alt="logo" >
 
 > Simple bot to help a manage you server
 
@@ -61,7 +61,7 @@ yarn prod  # or npm run prod
 
 #### 🌐 Online
 
-- Add bot clicking [here](https://discord.com/channels/696151866127548427/708696578554331218/751162384495673424)
+- Add bot clicking [here](https://discord.com/oauth2/authorize?client_id=736626386009194676&scope=bot&permissions=2146958847)
 - Select server and authorize bot to entry
 - Call using `$help`
 
@@ -91,11 +91,13 @@ yarn prod  # or npm run prod
 
 <h2 id="features">🎊 Features</h2>
 
-<h4> id="features-finished>🎇 Finished</h4>
+<h4 id="features-finished>🎇 Finished</h4>
+
 - [x] create initial commands
 - [x] create ambient config
 
-<h4> id="features-pendent>🎆 Pendent</h4>
+<h4 id="features-pendent>🎆 Pendent</h4>
+
 - [ ] create CRUD
 - [ ] craete commands for ban, warn, mute, etc
 - [ ] create experiencie system
