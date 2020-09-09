@@ -6,9 +6,11 @@
   "private": true,
   "scripts": {
     "format": "eslint src --ext ts",
-    "remove-old-build": "[ -d \"./build\" ] && rm -rf build",
-    "build": "npm run remove-old-build && sucrase src -d build --transforms typescript,imports",
-    "prod": "npm run build && node .",
+    "remove-old-build": "rimraf build",
+    "compile-build": "sucrase src -d build --transforms typescript,imports",
+    "copy-assets": "cpy '**/*.json' '../build/' --cwd=src --parents",
+    "build": "npm run remove-old-build && npm run compile-build && npm run copy-assets",
+    "prod": "npm run build && node build/index.js",
     "dev": "nodemon --watch src --exec sucrase-node src/index.ts"
   },
   "repository": {
@@ -28,8 +30,10 @@
   "author": "Mikael Rolim de Aquino <mikarg9@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "cpy-cli": "^3.1.1",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
+    "rimraf": "^3.0.2",
     "sucrase": "^3.15.0"
   },
   "devDependencies": {
