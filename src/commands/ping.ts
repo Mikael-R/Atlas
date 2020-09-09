@@ -2,19 +2,15 @@ import { Command } from '../types'
 
 const ping: Command = {
   name: 'ping',
-  aliases: ['p'],
+  aliases: ['p', 'pong', 'latency'],
   description: 'Show bot ping in milliseconds on send message',
   minArguments: 0,
   usage: 'ping',
   run: async ({ message, embed }) => {
-    const description = []
+    embed.setDescription(':ping_pong: Pong!')
 
-    description.push(':ping_pong: Pong!')
-    description.push(
-      `:nazar_amulet: **${Date.now() - message.createdTimestamp}ms**`
-    )
-
-    embed.setDescription(description.join('\n\n'))
+    embed.addField('Latency', `${Date.now() - message.createdTimestamp}ms`)
+    embed.addField('API', `${message.client.ws.ping}ms`)
 
     return embed
   },
