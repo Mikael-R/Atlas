@@ -11,21 +11,20 @@ const kick: Command = {
   run: async ({ message, embed, messageArgs }) => {
     const description: string[] = []
 
-    const user =
-      message.mentions.users.first() ||
-      message.guild.members.resolve(messageArgs[1])?.user
-    const userGuild = message.guild.member(user)
+    const userGuild =
+      message.guild.member(message.mentions.users.first()) ||
+      message.guild.members.resolve(messageArgs[1])
 
-    if (userGuild.kickable) {
-      userGuild.kick().then(() => {
-        description.push(
-          `:nazar_amulet: <@${message.author.id}> has kicked <@${user.id}>`
-        )
-      })
-    } else {
-      description.push(':red_circle: User not is kickable')
+    if (!userGuild || !userGuild.kickable) {
+      description.push(':red_circle: User not is kickable or not found')
 
       embed.setColor('#E81010')
+    } else {
+      await userGuild.kick()
+
+      description.push(
+        `:nazar_amulet: <@${message.author.id}> has kicked <@${userGuild.id}>`
+      )
     }
 
     embed.setDescription(description.join('\n\n'))

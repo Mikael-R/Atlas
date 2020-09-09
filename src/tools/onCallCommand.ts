@@ -12,7 +12,7 @@ const isCall: IsCall = (message, messageArgs) => {
 
 const invalidCall: InvalidCall = ({
   embed,
-  command,
+  command = {},
   messageArgs,
   permissions,
 }) => {
@@ -20,10 +20,10 @@ const invalidCall: InvalidCall = ({
 
   const needPermissions = {
     user:
-      command?.permissions?.filter(perm => !permissions.user.includes(perm)) ||
+      command.permissions?.filter(perm => !permissions.user.includes(perm)) ||
       [],
     bot:
-      command?.permissions?.filter(perm => !permissions.bot.includes(perm)) ||
+      command.permissions?.filter(perm => !permissions.bot.includes(perm)) ||
       [],
   }
 
@@ -38,11 +38,10 @@ const invalidCall: InvalidCall = ({
 
     case !!needPermissions.bot.length:
       description.push(
-        `:red_circle: I need permissions: ${needPermissions.user
+        `:red_circle: I need permissions: \`\`${needPermissions.user
           .toString()
           .toLowerCase()
-          .replace('_', ' ')
-          .replace(',', ', ')}`
+          .replace(',', ', ')}\`\``
       )
       break
 
@@ -51,11 +50,10 @@ const invalidCall: InvalidCall = ({
         `:red_circle: You need permissions: \`\`${needPermissions.user
           .toString()
           .toLowerCase()
-          .replace('_', ' ')
           .replace(',', ', ')}\`\``
       )
       description.push(
-        `:red_circle: Try run \`\`${flag}request-permission ${messageArgs.join(
+        `:red_circle: Try run: \`\`${flag}request-permission ${messageArgs.join(
           ' '
         )}\`\``
       )
