@@ -6,20 +6,21 @@ import { Command } from '../types'
 
 const requestPermission: Command = {
   name: 'request-permission',
-  aliases: ['req-perm', 'rp'],
+  aliases: ['req-perm', 'reqp'],
   description: 'Request permission to perform certain command.',
   minArguments: 1,
-  usage: '$request-permission [command]',
-  example: '$request-permission clear 10',
+  usage: 'request-permission [command]',
+  example: 'request-permission clear 10',
   run: async ({ message, embed, messageArgs }) => {
     const description: string[] = []
+
     messageArgs = messageArgs.slice(1, messageArgs.length)
 
     const command = commands.filter(
       cmd => cmd.name === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
     )[0]
 
-    const isValidCallCommand = onCallCommand.isValidCall({
+    const invalidCallCommand = onCallCommand.invalidCall({
       embed,
       command,
       messageArgs,
@@ -29,22 +30,20 @@ const requestPermission: Command = {
       },
     })
 
-    if (!isValidCallCommand.passed) {
-      return isValidCallCommand.embed
-    }
+    if (invalidCallCommand) return invalidCallCommand
 
     if (!command.permissions) {
       embed.setDescription(
-        `:nazar_amulet: \`\`${command.name}\`\` command don't need permission to run`
+        `:nazar_amulet: **${command.name}** don't need permission to run`
       )
 
       return embed
     }
 
-    embed.setDescription(
+    description.push(
       `:nazar_amulet: <@${
         message.author.id
-      }> request run command: \`\`${messageArgs.join(' ')}\`\``
+      }> request run: \`\`${messageArgs.join(' ')}\`\``
     )
 
     const filter: CollectorFilter = (reaction: MessageReaction, user: User) => {

@@ -1,13 +1,13 @@
 import { Command, ServerInformation } from '../types'
 
-const serverinformation: Command = {
-  name: 'serverinformation',
+const serverInformation: Command = {
+  name: 'server-information',
   aliases: ['serverinfo', 'svinfo'],
   description: 'Show information about this server',
   minArguments: 0,
-  usage: '$serverinformation',
+  usage: 'server-information',
   run: async ({ message, embed }) => {
-    const serverInformation: ServerInformation = {
+    const informations: ServerInformation = {
       name: message.guild.name,
       icon: message.guild.iconURL(),
       ownerNickname: message.guild.owner.user.tag,
@@ -26,21 +26,23 @@ const serverinformation: Command = {
 
     embed
       .setTitle('')
-      .setAuthor(serverInformation.name)
-      .setThumbnail(serverInformation.icon)
-      .addField('Owner', serverInformation.ownerNickname)
-      .addField('Created', serverInformation.created)
-      .addField('Region', serverInformation.region, true)
-      .addField('Members', serverInformation.members, true)
-      .addField('Channels', serverInformation.channels, true)
-      .addField(
+      .setAuthor(informations.name)
+      .setThumbnail(informations.icon)
+      .addField('Owner', informations.ownerNickname)
+      .addField('Created', informations.created)
+      .addField('Region', informations.region, true)
+      .addField('Members', informations.members, true)
+      .addField('Channels', informations.channels, true)
+      .setFooter(`ID: ${informations.id}`)
+
+    informations.premiumSubscriptionCount &&
+      embed.addField(
         'Premium Subscription Count',
-        serverInformation.premiumSubscriptionCount
+        informations.premiumSubscriptionCount
       )
-      .setFooter(`ID: ${serverInformation.id}`)
 
     return embed
   },
 }
 
-export default serverinformation
+export default serverInformation

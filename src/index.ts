@@ -3,6 +3,7 @@ import 'dotenv/config'
 import { Client } from 'discord.js'
 
 import commands from './commands/index'
+import { flag } from './prefererences.json'
 import createEmbed from './tools/createEmbed'
 import onCallCommand from './tools/onCallCommand'
 import onServer from './tools/onServer'
@@ -17,33 +18,37 @@ client.on('ready', () => {
 })
 
 client.on('guildCreate', guild => {
-  const embed = createEmbed({ color: '#1213BD' })
+  let embed = createEmbed({ color: '#1213BD' })
+
+  embed = onServer.added(embed, guild.owner.displayName, guild.name)
+
+  guild.owner.send(embed)
 
   console.log(
     `> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`
   )
-
-  guild.owner.send(onServer.added(embed, guild.owner.displayName, guild.name))
 })
 
 client.on('guildDelete', guild => {
-  const embed = createEmbed({ color: '#1213BD' })
+  let embed = createEmbed({ color: '#1213BD' })
+
+  embed = onServer.removed(embed, guild.owner.displayName, guild.name)
+
+  guild.owner.send(embed)
 
   console.log(
     `> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`
   )
-
-  guild.owner.send(onServer.removed(embed, guild.owner.displayName, guild.name))
 })
 
 client.on('message', async message => {
   const messageArgs = message.content.replace(/\s{2,}/g, ' ').split(' ')
 
-  if (!onCallCommand.isCall(message, messageArgs)) return
+  if (!onCallCommand.isCall(message, messageArgs)) return null
 
-  messageArgs[0] = messageArgs[0].replace('$', '')
+  messageArgs[0] = messageArgs[0].replace(flag, '')
 
-  const embed = createEmbed({
+  let embed = createEmbed({
     title: message.guild.name,
     color: '#1213BD',
   })
@@ -52,7 +57,9 @@ client.on('message', async message => {
     cmd => cmd.name === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
   )[0]
 
-  const isValidCallCommand = onCallCommand.isValidCall({
+  if (!command) return null
+
+  const invalidCallCommand = onCallCommand.invalidCall({
     embed,
     command,
     messageArgs,
@@ -64,13 +71,10 @@ client.on('message', async message => {
     },
   })
 
-  if (isValidCallCommand.passed) {
-    command
-      .run({ message, embed, messageArgs })
-      .then(embed => message.channel.send(embed))
-  } else {
-    message.channel.send(isValidCallCommand.embed)
-  }
+  embed =
+    invalidCallCommand || (await command.run({ message, embed, messageArgs }))
+
+  message.channel.send(embed)
 })
 
 client.login(process.env.TOKEN)

@@ -5,7 +5,7 @@ const ping: Command = {
   aliases: ['p'],
   description: 'Show bot ping in milliseconds on send message',
   minArguments: 0,
-  usage: '$ping',
+  usage: 'ping',
   run: async ({ message, embed }) => {
     const description = []
 

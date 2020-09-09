@@ -6,12 +6,14 @@ const kick: Command = {
   description: 'Kick user from server',
   minArguments: 1,
   permissions: ['KICK_MEMBERS'],
-  usage: '$kick [user mention]',
-  example: '$kick @aziris',
-  run: async ({ message, embed }) => {
+  usage: 'kick [mention, id]',
+  example: 'kick 736626386009194676',
+  run: async ({ message, embed, messageArgs }) => {
     const description: string[] = []
 
-    const user = message.mentions.users.first()
+    const user =
+      message.mentions.users.first() ||
+      message.guild.members.resolve(messageArgs[1])?.user
     const userGuild = message.guild.member(user)
 
     if (userGuild.kickable) {

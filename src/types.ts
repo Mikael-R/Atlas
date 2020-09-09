@@ -34,7 +34,7 @@ export interface IsCall {
   (message: Message, messageArgs: string[]): boolean
 }
 
-export interface IsValidCall {
+export interface InvalidCall {
   ({
     embed,
     command,
@@ -48,7 +48,7 @@ export interface IsValidCall {
       user: PermissionString[]
       bot: PermissionString[]
     }
-  }): { embed: MessageEmbed; passed: boolean }
+  }): MessageEmbed
 }
 
 export interface UserInformation {

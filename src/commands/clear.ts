@@ -1,4 +1,4 @@
-import { TextChannel, NewsChannel } from 'discord.js'
+import { TextChannel } from 'discord.js'
 
 import { Command } from '../types'
 
@@ -8,29 +8,21 @@ const clear: Command = {
   description: 'Delete previous messages',
   permissions: ['MANAGE_MESSAGES'],
   minArguments: 1,
-  usage: '$clear [limit]',
-  example: '$clear 7',
+  usage: 'clear [limit]',
+  example: 'clear 7',
   run: async ({ message, embed, messageArgs }) => {
     const description: string[] = []
 
     const limit = Number(messageArgs[1])
 
-    if (limit < 2 || limit > 9999 || isNaN(limit)) {
+    if (limit < 0 || limit > 4096 || isNaN(limit)) {
       description.push(':nazar_amulet: You not informed a valid value')
-      description.push(
-        ':nazar_amulet: Use numbers ​​greater than 1 and less than 9999'
-      )
+      description.push(':nazar_amulet: Use low numbers greater than zero')
     } else {
-      message.channel.messages
-        .fetch({ limit: limit })
-        .then(messageToDelete =>
-          (message.channel as TextChannel | NewsChannel).bulkDelete(
-            messageToDelete
-          )
-        )
+      ;(message.channel as TextChannel).bulkDelete(limit + 1)
 
       description.push(
-        `:nazar_amulet: <@${message.author.id}> has deleted ${limit} messages`
+        `:nazar_amulet: <@${message.author.id}> has deleted **${limit}** messages`
       )
     }
 
