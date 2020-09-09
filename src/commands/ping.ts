@@ -6,7 +6,7 @@ const ping: Command = {
   description: 'Show bot ping in milliseconds on send message',
   minArguments: 0,
   usage: 'ping',
-  run: async ({ message, embed }) => {
+  run: ({ message, embed }) => {
     embed.setDescription(':ping_pong: Pong!')
 
     embed.addField('Latency', `${Date.now() - message.createdTimestamp}ms`)

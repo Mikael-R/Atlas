@@ -1,4 +1,4 @@
-import { CollectorFilter, User, MessageReaction } from 'discord.js'
+import { CollectorFilter, User, MessageReaction, GuildMember } from 'discord.js'
 
 import commands from '.'
 import onCallCommand from '../tools/onCallCommand'
@@ -15,6 +15,7 @@ const requestPermission: Command = {
     const description: string[] = []
 
     messageArgs = messageArgs.slice(1, messageArgs.length)
+    const requestRun = messageArgs.join(' ')
 
     const command = commands.filter(
       cmd => cmd.name === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
@@ -32,58 +33,68 @@ const requestPermission: Command = {
 
     if (invalidCallCommand) return invalidCallCommand
 
+    const needPermissions = (member: GuildMember) =>
+      command.permissions?.filter(perm => !member.hasPermission(perm)) || []
+
+    const userHavePermission = !needPermissions(
+      message.guild.members.resolve(message.author.id)
+    ).length
+
     if (!command.permissions) {
       embed.setDescription(
-        `:nazar_amulet: **${command.name}** don't need permission to run`
+        `:nazar_amulet: Not is required permission to run: \`\`${requestRun}\`\``
       )
 
       return embed
     }
 
-    description.push(
-      `:nazar_amulet: <@${
-        message.author.id
-      }> request run: \`\`${messageArgs.join(' ')}\`\``
-    )
+    if (userHavePermission) {
+      embed.setDescription(
+        `:nazar_amulet: You already have permission to run: \`\`${requestRun}\`\``
+      )
+
+      return embed
+    }
 
     const filter: CollectorFilter = (reaction: MessageReaction, user: User) => {
       const member = message.guild.members.resolve(user.id)
-      const needPermission = command.permissions.filter(
-        perm => !member.hasPermission(perm)
-      )
+
+      const havePermission = !needPermissions(member).length
 
       return (
         ['👍', '👎'].includes(reaction.emoji.name) &&
-        user.id === message.author.id &&
-        !needPermission
+        user.id !== reaction.message.author.id &&
+        havePermission
       )
     }
 
+    embed.setDescription(
+      `:nazar_amulet: <@${message.author.id}> request run: \`\`${requestRun}\`\``
+    )
+
     const confirmMessage = await message.channel.send(embed)
 
-    confirmMessage.react('👍')
-    confirmMessage.react('👎')
+    await confirmMessage.react('👍')
+    await confirmMessage.react('👎')
 
-    confirmMessage
+    await confirmMessage
       .awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
-      .then(collected => {
+      .then(async collected => {
         const reaction = collected.first()
 
-        const userAccepted: User = reaction.users.cache.toJSON()[1]
+        const userAccepted = reaction.users.cache.last()
 
         if (reaction.emoji.name === '👍') {
           description.push(
-            `:white_check_mark: <@${userAccepted.id}> accepted <@${
-              message.author.id
-            }> \`\`run ${messageArgs.join(' ')}\`\``
+            `:white_check_mark: <@${userAccepted.id}> accepted <@${message.author.id}> run: \`\`${requestRun}\`\``
           )
 
-          return command.run({ message, embed, messageArgs })
+          const returnEmbed = await command.run({ message, embed, messageArgs })
+
+          returnEmbed && message.channel.send(returnEmbed)
         } else {
           description.push(
-            `:x: <@${userAccepted.id}> recused <@${
-              message.author.id
-            }> \`\`run ${messageArgs.join(' ')}\`\``
+            `:x: <@${userAccepted.id}> recused <@${message.author.id}> run: \`\`${requestRun}\`\``
           )
           embed.setColor('#E81010')
         }

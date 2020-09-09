@@ -1,10 +1,9 @@
 import 'dotenv/config'
 
-import { Client } from 'discord.js'
+import { Client, MessageEmbed } from 'discord.js'
 
 import commands from './commands/index'
 import { flag } from './prefererences.json'
-import createEmbed from './tools/createEmbed'
 import onCallCommand from './tools/onCallCommand'
 import onServer from './tools/onServer'
 import randomizeStatus from './tools/randomizeStatus'
@@ -18,11 +17,9 @@ client.on('ready', () => {
 })
 
 client.on('guildCreate', guild => {
-  let embed = createEmbed({ color: '#1213BD' })
+  const embed = new MessageEmbed({ color: '#1213BD' })
 
-  embed = onServer.added(embed, guild.owner.displayName, guild.name)
-
-  guild.owner.send(embed)
+  guild.owner.send(onServer.added(embed, guild.owner.displayName, guild.name))
 
   console.log(
     `> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`
@@ -30,11 +27,9 @@ client.on('guildCreate', guild => {
 })
 
 client.on('guildDelete', guild => {
-  let embed = createEmbed({ color: '#1213BD' })
+  const embed = new MessageEmbed({ color: '#1213BD' })
 
-  embed = onServer.removed(embed, guild.owner.displayName, guild.name)
-
-  guild.owner.send(embed)
+  guild.owner.send(onServer.removed(embed, guild.owner.displayName, guild.name))
 
   console.log(
     `> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`
@@ -48,7 +43,7 @@ client.on('message', async message => {
 
   messageArgs[0] = messageArgs[0].replace(flag, '')
 
-  let embed = createEmbed({
+  const embed = new MessageEmbed({
     title: message.guild.name,
     color: '#1213BD',
   })
@@ -71,10 +66,10 @@ client.on('message', async message => {
     },
   })
 
-  embed =
+  const returnEmbed =
     invalidCallCommand || (await command.run({ message, embed, messageArgs }))
 
-  message.channel.send(embed)
+  returnEmbed && message.channel.send(returnEmbed)
 })
 
 client.login(process.env.TOKEN)

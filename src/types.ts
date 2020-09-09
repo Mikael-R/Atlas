@@ -1,15 +1,10 @@
 import {
-  MessageEmbedOptions,
   MessageEmbed,
   PermissionString,
   Message,
   Collection,
   Role,
 } from 'discord.js'
-
-export interface CreateEmbed {
-  (options: MessageEmbedOptions): MessageEmbed
-}
 
 export interface Command {
   name: string
@@ -27,7 +22,7 @@ export interface Command {
     message: Message
     embed: MessageEmbed
     messageArgs: string[]
-  }) => Promise<MessageEmbed>
+  }) => void | MessageEmbed | Promise<MessageEmbed>
 }
 
 export interface IsCall {

@@ -7,7 +7,7 @@ const userInformation: Command = {
   minArguments: 0,
   usage: 'user-information [mention, id or empty]',
   example: 'user-information 736626386009194676',
-  run: async ({ message, embed, messageArgs }) => {
+  run: ({ message, embed, messageArgs }) => {
     const user =
       message.mentions.users.first() ||
       message.guild.members.resolve(messageArgs[1])?.user ||

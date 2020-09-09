@@ -19,7 +19,7 @@ const clear: Command = {
       description.push(':nazar_amulet: You not informed a valid value')
       description.push(':nazar_amulet: Use low numbers greater than zero')
     } else {
-      ;(message.channel as TextChannel).bulkDelete(limit + 1)
+      await (message.channel as TextChannel).bulkDelete(limit + 1)
 
       description.push(
         `:nazar_amulet: <@${message.author.id}> has deleted **${limit}** messages`
