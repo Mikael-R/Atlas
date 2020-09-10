@@ -33,13 +33,12 @@ const serverInformation: Command = {
       .addField('Region', informations.region, true)
       .addField('Members', informations.members, true)
       .addField('Channels', informations.channels, true)
-      .setFooter(`ID: ${informations.id}`)
-
     informations.premiumSubscriptionCount &&
       embed.addField(
         'Premium Subscription Count',
         informations.premiumSubscriptionCount
       )
+    embed.addField('ID', informations.id)
 
     return embed
   },

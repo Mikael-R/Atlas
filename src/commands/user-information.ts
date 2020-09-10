@@ -40,13 +40,12 @@ const userInformation: Command = {
       .addField('Joined', informations.joined)
       .addField('Status', informations.status, true)
       .addField('Bot', informations.isBot ? 'Yes' : 'No', true)
-      .setFooter(`ID: ${informations.id}`)
-
     informations.roles.size > 0 &&
       embed.addField(
         `Roles [${informations.roles.size}]`,
         informations.roles.map(role => `<@&${role.id}>`).join(' ')
       )
+    embed.addField('ID', informations.id)
 
     return embed
   },

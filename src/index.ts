@@ -69,7 +69,14 @@ client.on('message', async message => {
   const returnEmbed =
     invalidCallCommand || (await command.run({ message, embed, messageArgs }))
 
-  returnEmbed && message.channel.send(returnEmbed)
+  if (returnEmbed) {
+    returnEmbed.setFooter(
+      `Command requested by: ${message.author.username}`,
+      message.author.avatarURL()
+    )
+
+    message.channel.send(returnEmbed)
+  }
 })
 
 client.login(process.env.TOKEN)
