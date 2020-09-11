@@ -2,16 +2,16 @@ import { CollectorFilter, User, MessageReaction, GuildMember } from 'discord.js'
 
 import commands from '.'
 import onCallCommand from '../tools/onCallCommand'
-import { Command } from '../types'
+import { Command, RunConfig } from '../types'
 
-const requestPermission: Command = {
-  name: 'request-permission',
-  aliases: ['req-perm', 'reqp'],
-  description: 'Request permission to perform certain command.',
-  minArguments: 1,
-  usage: 'request-permission [command]',
-  example: 'request-permission clear 10',
-  run: async ({ message, embed, messageArgs }) => {
+class RequestPermission implements Command {
+  name = 'request-permission'
+  aliases = ['req-perm', 'reqp']
+  description = 'Request permission to perform certain command.'
+  minArguments = 1
+  usage = 'request-permission [command]'
+  example = 'request-permission clear 10'
+  async run({ message, embed, messageArgs }: RunConfig) {
     const description: string[] = []
 
     messageArgs = messageArgs.slice(1, messageArgs.length)
@@ -110,7 +110,7 @@ const requestPermission: Command = {
           confirmMessage.reactions.removeAll()
         }
       })
-  },
+  }
 }
 
-export default requestPermission
+export default RequestPermission

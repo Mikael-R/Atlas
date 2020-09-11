@@ -6,6 +6,10 @@ import {
   Role,
 } from 'discord.js'
 
+export interface CommandClass {
+  new (): Command
+}
+
 export interface Command {
   name: string
   aliases: string[]
@@ -18,11 +22,13 @@ export interface Command {
     message,
     embed,
     messageArgs,
-  }: {
-    message: Message
-    embed: MessageEmbed
-    messageArgs: string[]
-  }) => void | MessageEmbed | Promise<MessageEmbed>
+  }: RunConfig) => void | MessageEmbed | Promise<MessageEmbed>
+}
+
+export interface RunConfig {
+  message: Message
+  embed: MessageEmbed
+  messageArgs: string[]
 }
 
 export interface IsCall {

@@ -1,16 +1,16 @@
-import { TextChannel } from 'discord.js'
+import { PermissionString, TextChannel } from 'discord.js'
 
-import { Command } from '../types'
+import { Command, RunConfig } from '../types'
 
-const clear: Command = {
-  name: 'clear',
-  aliases: ['c', 'cls'],
-  description: 'Delete previous messages',
-  permissions: ['MANAGE_MESSAGES'],
-  minArguments: 1,
-  usage: 'clear [limit]',
-  example: 'clear 7',
-  run: async ({ message, embed, messageArgs }) => {
+class Clear implements Command {
+  name = 'clear'
+  aliases = ['c', 'cls']
+  description = 'Delete previous messages'
+  permissions: PermissionString[] = ['MANAGE_MESSAGES']
+  minArguments = 1
+  usage = 'clear [limit]'
+  example = 'clear 7'
+  async run({ message, embed, messageArgs }: RunConfig) {
     const description: string[] = []
 
     const limit = Number(messageArgs[1])
@@ -29,7 +29,7 @@ const clear: Command = {
     embed.setDescription(description.join('\n\n'))
 
     return embed
-  },
+  }
 }
 
-export default clear
+export default Clear

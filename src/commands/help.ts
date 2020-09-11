@@ -1,15 +1,18 @@
+import { PermissionString } from 'discord.js'
+
 import commands from '.'
 import { flag } from '../prefererences.json'
-import { Command } from '../types'
+import { Command, RunConfig } from '../types'
 
-const help: Command = {
-  name: 'help',
-  aliases: ['h'],
-  description: 'Show commands or more information about specific command',
-  minArguments: 0,
-  usage: 'help [command or empty to view list]',
-  example: 'help ping',
-  run: ({ embed, messageArgs }) => {
+class Help implements Command {
+  name = 'help'
+  aliases = ['h']
+  description = 'Show commands or more information about specific command'
+  minArguments = 0
+  permissions: PermissionString[]
+  usage = 'help [command or empty to view list]'
+  example = 'help ping'
+  run({ embed, messageArgs }: RunConfig) {
     const description: string[] = []
 
     const command: Command = commands.filter(
@@ -43,7 +46,7 @@ const help: Command = {
     embed.setDescription(description.join('\n\n'))
 
     return embed
-  },
+  }
 }
 
-export default help
+export default Help
