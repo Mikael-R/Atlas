@@ -1,19 +1,26 @@
-import { Command, UserInformation } from '../types'
+import { PermissionString } from 'discord.js'
 
-const userInformation: Command = {
-  name: 'user-information',
-  aliases: ['userinfo', 'usinfo'],
-  description: 'Show information about you or user mentioned',
-  minArguments: 0,
-  usage: 'user-information [mention, id or empty]',
-  example: 'user-information 736626386009194676',
-  run: ({ message, embed, messageArgs }) => {
+import {
+  Command,
+  RunConfig,
+  UserInformation as UserInformationType,
+} from '../types'
+
+class UserInformation implements Command {
+  name = 'user-information'
+  aliases = ['userinfo', 'usinfo']
+  description = 'Show information about you or user mentioned'
+  minArguments = 0
+  permissions?: PermissionString[]
+  usage = 'user-information [mention, id or empty]'
+  example = 'user-information 736626386009194676'
+  run({ message, embed, messageArgs }: RunConfig) {
     const user =
       message.mentions.users.first() ||
       message.guild.members.resolve(messageArgs[1])?.user ||
       message.author
 
-    const informations: UserInformation = {
+    const informations: UserInformationType = {
       tag: user.tag,
       avatar: user.displayAvatarURL(),
       status: user.presence.status,
@@ -48,7 +55,7 @@ const userInformation: Command = {
     embed.addField('ID', informations.id)
 
     return embed
-  },
+  }
 }
 
-export default userInformation
+export default UserInformation

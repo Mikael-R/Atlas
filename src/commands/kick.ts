@@ -1,14 +1,16 @@
-import { Command } from '../types'
+import { PermissionString } from 'discord.js'
 
-const kick: Command = {
-  name: 'kick',
-  aliases: ['k', 'kck'],
-  description: 'Kick user from server',
-  minArguments: 1,
-  permissions: ['KICK_MEMBERS'],
-  usage: 'kick [mention, id]',
-  example: 'kick 736626386009194676',
-  run: async ({ message, embed, messageArgs }) => {
+import { Command, RunConfig } from '../types'
+
+class Kick implements Command {
+  name = 'kick'
+  aliases = ['k', 'kck']
+  description = 'Kick user from server'
+  minArguments = 1
+  permissions: PermissionString[] = ['KICK_MEMBERS']
+  usage = 'kick [mention, id]'
+  example = 'kick 736626386009194676'
+  async run({ message, embed, messageArgs }: RunConfig) {
     const description: string[] = []
 
     const userGuild =
@@ -30,7 +32,7 @@ const kick: Command = {
     embed.setDescription(description.join('\n\n'))
 
     return embed
-  },
+  }
 }
 
-export default kick
+export default Kick

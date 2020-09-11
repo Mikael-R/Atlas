@@ -1,16 +1,17 @@
 import { readdirSync } from 'fs'
 
-import { Command } from '../types'
+import { Command, CommandClass } from '../types'
 
 const commands: Command[] = []
 const exclude = ['index.ts', 'index.js']
 const dir = readdirSync(__dirname).filter(file => !exclude.includes(file))
 
 for (const file of dir) {
-  const command: Command | undefined = require(`${__dirname}/${file}`).default
+  const Command: CommandClass | undefined = require(`${__dirname}/${file}`)
+    .default
 
-  if (!command) console.log(`Command ${__dirname}/${file} need default export`)
-  else commands.push(command)
+  if (!Command) console.log(`Command ${__dirname}/${file} need default export`)
+  else commands.push(new Command())
 }
 
 export default commands

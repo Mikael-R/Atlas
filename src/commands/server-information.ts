@@ -1,13 +1,17 @@
-import { Command, ServerInformation } from '../types'
+import {
+  Command,
+  RunConfig,
+  ServerInformation as ServerInformationType,
+} from '../types'
 
-const serverInformation: Command = {
-  name: 'server-information',
-  aliases: ['serverinfo', 'svinfo'],
-  description: 'Show information about this server',
-  minArguments: 0,
-  usage: 'server-information',
-  run: ({ message, embed }) => {
-    const informations: ServerInformation = {
+class ServerInformation implements Command {
+  name = 'server-information'
+  aliases = ['serverinfo', 'svinfo']
+  description = 'Show information about this server'
+  minArguments = 0
+  usage = 'server-information'
+  run({ message, embed }: RunConfig) {
+    const informations: ServerInformationType = {
       name: message.guild.name,
       icon: message.guild.iconURL(),
       ownerNickname: message.guild.owner.user.tag,
@@ -41,7 +45,7 @@ const serverInformation: Command = {
     embed.addField('ID', informations.id)
 
     return embed
-  },
+  }
 }
 
-export default serverInformation
+export default ServerInformation
