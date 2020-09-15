@@ -3,7 +3,7 @@ import 'dotenv/config'
 import { Client, MessageEmbed } from 'discord.js'
 
 import commands from './commands/index'
-import { flag } from './prefererences.json'
+import { flag } from './preferences.json'
 import onCallCommand from './tools/onCallCommand'
 import onServer from './tools/onServer'
 import randomizeStatus from './tools/randomizeStatus'
