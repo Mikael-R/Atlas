@@ -1,4 +1,4 @@
-import { flag } from '../prefererences.json'
+import { flag } from '../preferences.json'
 import { IsCall, InvalidCall } from '../types'
 
 const isCall: IsCall = (message, messageArgs) => {
@@ -12,7 +12,7 @@ const isCall: IsCall = (message, messageArgs) => {
 
 const invalidCall: InvalidCall = ({
   embed,
-  command = {},
+  command,
   messageArgs,
   permissions,
 }) => {
@@ -20,10 +20,10 @@ const invalidCall: InvalidCall = ({
 
   const needPermissions = {
     user:
-      command.permissions?.filter(perm => !permissions.user.includes(perm)) ||
+      command?.permissions?.filter(perm => !permissions.user.includes(perm)) ||
       [],
     bot:
-      command.permissions?.filter(perm => !permissions.bot.includes(perm)) ||
+      command?.permissions?.filter(perm => !permissions.bot.includes(perm)) ||
       [],
   }
 
