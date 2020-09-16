@@ -2,69 +2,83 @@ import { PermissionString, EmbedFieldData } from 'discord.js'
 
 import commands from '.'
 import { flag } from '../preferences.json'
-import { Command, RunConfig } from '../types'
+import { Command, CommandConfig, CommandClass } from '../types'
 import listItems from '../utils/listItems'
 
 class Help implements Command {
-  name = 'help'
-  aliases = ['h']
-  description = 'Show commands or more information about specific command'
-  minArguments = 0
-  permissions: PermissionString[]
-  usage = 'help [command, page number]'
-  example = 'help 2'
-  run({ embed, messageArgs }: RunConfig) {
+  constructor(protected commandConfig: CommandConfig) {}
+
+  static named = 'help'
+  static aliases = ['h']
+  static description =
+    'Show commands or more information about specific command'
+
+  static minArguments = 0
+  static permissions: PermissionString[]
+  static usage = 'help [command, page number]'
+  static example = 'help 2'
+
+  async run() {
+    const { embed, messageArgs } = this.commandConfig
+
     const description: string[] = []
     const fields: EmbedFieldData[] = []
 
     const maxCommandsInPage = 5
 
-    const pageIndex = Number(messageArgs[1] || 1)
-    const command: Command = commands.filter(
-      cmd => cmd.name === messageArgs[1] || cmd.aliases.includes(messageArgs[1])
+    const pageIndex = Number(messageArgs[1])
+    const Command = commands.filter(
+      cmd =>
+        cmd.named === messageArgs[1] || cmd.aliases.includes(messageArgs[1])
     )[0]
 
-    if (pageIndex) {
-      const commandsToPage: Command[] = listItems(
-        commands,
-        pageIndex,
-        maxCommandsInPage
-      )
+    const commandsToPage: CommandClass[] = listItems(
+      commands,
+      pageIndex || 1,
+      maxCommandsInPage
+    )
 
-      commandsToPage.forEach(({ name, description }) =>
-        fields.push({ name, value: description })
-      )
-    } else if (command) {
-      fields.push({ name: 'Name', value: `**${command.name}**` })
-      fields.push({
-        name: 'Aliases',
-        value: command.aliases.toString().replace(',', ', '),
-      })
-      fields.push({
-        name: 'Description',
-        value: command.description,
-      })
-      command.permissions &&
+    switch (true) {
+      case !!pageIndex:
+        commandsToPage.forEach(({ named, description }) =>
+          fields.push({ name: named, value: description })
+        )
+        break
+
+      case !!Command:
+        fields.push({ name: 'Name', value: `**${Command.name}**` })
         fields.push({
-          name: 'Permissions',
-          value: command.permissions
-            .toString()
-            .toLowerCase()
-            .replace('_', ' ')
-            .replace(',', ', '),
+          name: 'Aliases',
+          value: Command.aliases.toString().replace(',', ', '),
         })
-      fields.push({
-        name: 'Usage',
-        value: `\`\`${flag}${command.usage}\`\``,
-      })
-      command.example &&
         fields.push({
-          name: 'Example',
-          value: `\`\`${flag}${command.example}\`\``,
+          name: 'Description',
+          value: Command.description,
         })
-    } else {
-      description.push(':nazar_amulet: You not informed a valid value')
-      description.push(`:nazar_amulet: \`\`${flag}${this.usage}\`\``)
+        Command.permissions &&
+          fields.push({
+            name: 'Permissions',
+            value: Command.permissions
+              .toString()
+              .toLowerCase()
+              .replace('_', ' ')
+              .replace(',', ', '),
+          })
+        fields.push({
+          name: 'Usage',
+          value: `\`\`${flag}${Command.usage}\`\``,
+        })
+        Command.example &&
+          fields.push({
+            name: 'Example',
+            value: `\`\`${flag}${Command.example}\`\``,
+          })
+        break
+
+      default:
+        commandsToPage.forEach(({ named, description }) =>
+          fields.push({ name: named, value: description })
+        )
     }
 
     embed.setDescription(description.join('\n\n'))

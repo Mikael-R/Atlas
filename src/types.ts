@@ -7,25 +7,22 @@ import {
 } from 'discord.js'
 
 export interface CommandClass {
-  new (): Command
-}
-
-export interface Command {
-  name: string
+  new (CommandConfig: CommandConfig): Command
+  named: string
   aliases: string[]
   description: string
   permissions?: PermissionString[]
   minArguments: number
   usage: string
   example?: string
-  run: ({
-    message,
-    embed,
-    messageArgs,
-  }: RunConfig) => void | MessageEmbed | Promise<MessageEmbed>
 }
 
-export interface RunConfig {
+export interface Command {
+  validator?: () => string[] | []
+  run: () => void | MessageEmbed | Promise<MessageEmbed>
+}
+
+export interface CommandConfig {
   message: Message
   embed: MessageEmbed
   messageArgs: string[]
@@ -38,18 +35,24 @@ export interface IsCall {
 export interface InvalidCall {
   ({
     embed,
-    command,
+    message,
+    Command,
     messageArgs,
     permissions,
   }: {
     embed: MessageEmbed
-    command: Command
+    message: Message
+    Command: CommandClass
     messageArgs: string[]
     permissions: {
       user: PermissionString[]
       bot: PermissionString[]
     }
   }): MessageEmbed
+}
+
+export interface ErrorToRun {
+  ({ embed, error }: { embed: MessageEmbed; error: Error }): MessageEmbed
 }
 
 export interface UserInformation {

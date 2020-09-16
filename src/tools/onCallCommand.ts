@@ -1,5 +1,5 @@
 import { flag } from '../preferences.json'
-import { IsCall, InvalidCall } from '../types'
+import { IsCall, InvalidCall, ErrorToRun } from '../types'
 
 const isCall: IsCall = (message, messageArgs) => {
   return !(
@@ -12,7 +12,8 @@ const isCall: IsCall = (message, messageArgs) => {
 
 const invalidCall: InvalidCall = ({
   embed,
-  command,
+  message,
+  Command,
   messageArgs,
   permissions,
 }) => {
@@ -20,20 +21,26 @@ const invalidCall: InvalidCall = ({
 
   const needPermissions = {
     user:
-      command?.permissions?.filter(perm => !permissions.user.includes(perm)) ||
+      Command?.permissions?.filter(perm => !permissions.user.includes(perm)) ||
       [],
     bot:
-      command?.permissions?.filter(perm => !permissions.bot.includes(perm)) ||
+      Command?.permissions?.filter(perm => !permissions.bot.includes(perm)) ||
       [],
   }
 
+  const commandInitialized = new Command({ message, embed, messageArgs })
+
+  const validation = commandInitialized.validator
+    ? commandInitialized?.validator()
+    : []
+
   switch (true) {
-    case !command:
-      description.push(`:red_circle: Not found command: **${messageArgs[0]}**`)
+    case !Command:
+      description.push(`:red_circle: Not found Command: **${messageArgs[0]}**`)
       break
 
-    case messageArgs.length - 1 < command.minArguments:
-      description.push(`:red_circle: Need arguments: \`\`${command.usage}\`\``)
+    case messageArgs.length - 1 < Command.minArguments:
+      description.push(`:red_circle: Need arguments: \`\`${Command.usage}\`\``)
       break
 
     case !!needPermissions.bot.length:
@@ -58,14 +65,18 @@ const invalidCall: InvalidCall = ({
         )}\`\``
       )
       break
+
+    case !!validation.length:
+      validation.forEach(desc => description.push(desc))
+      break
   }
 
   if (!description.length) return null
 
   description.push(
     `:red_circle: Use **${flag}help ${
-      command?.name || ''
-    }** for more informations`
+      Command?.name || ''
+    }** for more information's`
   )
 
   embed.setColor('#E81010')
@@ -74,4 +85,18 @@ const invalidCall: InvalidCall = ({
   return embed
 }
 
-export default { isCall, invalidCall }
+const errorToRun: ErrorToRun = ({ embed, error }) => {
+  const description: string[] = []
+
+  description.push(':red_circle: Sorry, something went wrong')
+  description.push(`:interrobang: \`\`${error.message}\`\``)
+
+  embed.setColor('#E81010')
+  embed.setDescription(description.join('\n\n'))
+
+  console.error(error)
+
+  return embed
+}
+
+export default { isCall, invalidCall, errorToRun }

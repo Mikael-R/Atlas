@@ -7,6 +7,7 @@ import { flag } from './preferences.json'
 import onCallCommand from './tools/onCallCommand'
 import onServer from './tools/onServer'
 import randomizeStatus from './tools/randomizeStatus'
+import { CommandClass, CommandConfig } from './types'
 
 const client = new Client()
 
@@ -48,15 +49,16 @@ client.on('message', async message => {
     color: '#1213BD',
   })
 
-  const command = commands.filter(
+  const Command = commands.filter(
     cmd => cmd.name === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
   )[0]
 
-  if (!command) return null
+  if (!Command) return null
 
   const invalidCallCommand = onCallCommand.invalidCall({
     embed,
-    command,
+    message,
+    Command,
     messageArgs,
     permissions: {
       user: message.guild.members
@@ -66,8 +68,21 @@ client.on('message', async message => {
     },
   })
 
+  const execCommand = (Command: CommandClass, commandConfig: CommandConfig) => {
+    try {
+      return new Command(commandConfig).run()
+    } catch (error) {
+      return onCallCommand.errorToRun({ embed, error })
+    }
+  }
+
   const returnEmbed =
-    invalidCallCommand || (await command.run({ message, embed, messageArgs }))
+    invalidCallCommand ||
+    (await execCommand(Command, {
+      message,
+      embed,
+      messageArgs,
+    }))
 
   if (returnEmbed) {
     returnEmbed.setFooter(
@@ -75,7 +90,7 @@ client.on('message', async message => {
       message.author.avatarURL()
     )
 
-    message.channel.send(returnEmbed)
+    await message.channel.send(returnEmbed)
   }
 })
 

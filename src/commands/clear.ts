@@ -1,32 +1,38 @@
 import { PermissionString, TextChannel } from 'discord.js'
 
-import { Command, RunConfig } from '../types'
+import { Command, CommandConfig } from '../types'
 
 class Clear implements Command {
-  name = 'clear'
-  aliases = ['c', 'cls']
-  description = 'Delete previous messages'
-  permissions: PermissionString[] = ['MANAGE_MESSAGES']
-  minArguments = 1
-  usage = 'clear [limit]'
-  example = 'clear 7'
-  async run({ message, embed, messageArgs }: RunConfig) {
-    const description: string[] = []
+  private limit: number
+  constructor(private commandConfig: CommandConfig) {
+    this.limit = Number(commandConfig.messageArgs[1])
+  }
 
-    const limit = Number(messageArgs[1])
+  static named = 'clear'
+  static aliases = ['c', 'cls']
+  static description = 'Delete previous messages'
+  static permissions: PermissionString[] = ['MANAGE_MESSAGES']
+  static minArguments = 1
+  static usage = 'clear [limit]'
+  static example = 'clear 7'
 
-    if (limit < 0 || limit > 4096 || isNaN(limit)) {
-      description.push(':nazar_amulet: You not informed a valid value')
-      description.push(':nazar_amulet: Use low numbers greater than zero')
-    } else {
-      await (message.channel as TextChannel).bulkDelete(limit + 1)
+  validator() {
+    return this.limit < 0 || this.limit > 4096 || isNaN(this.limit)
+      ? [
+          ':red_circle: You not informed a valid value',
+          ':red_circle: Use low numbers greater than zero',
+        ]
+      : []
+  }
 
-      description.push(
-        `:nazar_amulet: <@${message.author.id}> has deleted **${limit}** messages`
-      )
-    }
+  async run() {
+    const { embed, message } = this.commandConfig
 
-    embed.setDescription(description.join('\n\n'))
+    await (message.channel as TextChannel).bulkDelete(this.limit + 1)
+
+    embed.setDescription(
+      `:nazar_amulet: Deleted **${this.limit}** messages in this channel`
+    )
 
     return embed
   }

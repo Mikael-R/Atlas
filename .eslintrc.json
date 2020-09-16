@@ -16,21 +16,9 @@
     "eslint-plugin-import-helpers"
   ],
   "ignorePatterns": ["build/"],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {
-        "@typescript-eslint/no-unused-vars": [
-          2,
-          {
-            "args": "none"
-          }
-        ]
-      }
-    }
-  ],
   "rules": {
     "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
     "prettier/prettier": "error",
     "import-helpers/order-imports": [
       "error",
@@ -42,6 +30,7 @@
           "ignoreCase": true
         }
       }
-    ]
+    ],
+    "no-useless-constructor": "off"
   }
 }

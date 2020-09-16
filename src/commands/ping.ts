@@ -1,12 +1,17 @@
-import { Command, RunConfig } from '../types'
+import { Command, CommandConfig } from '../types'
 
 class Ping implements Command {
-  name = 'ping'
-  aliases = ['p', 'pong', 'latency']
-  description = 'Show bot ping in milliseconds on send message'
-  minArguments = 0
-  usage = 'ping'
-  run({ message, embed }: RunConfig) {
+  constructor(private commandConfig: CommandConfig) {}
+
+  static named = 'ping'
+  static aliases = ['p', 'pong', 'latency']
+  static description = 'Show bot ping in milliseconds on send message'
+  static minArguments = 0
+  static usage = 'ping'
+
+  async run() {
+    const { embed, message } = this.commandConfig
+
     embed.setDescription(':ping_pong: Pong!')
 
     embed.addField('Latency', `${Date.now() - message.createdTimestamp}ms`)

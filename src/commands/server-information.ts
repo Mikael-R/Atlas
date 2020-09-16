@@ -1,17 +1,22 @@
 import {
   Command,
-  RunConfig,
   ServerInformation as ServerInformationType,
+  CommandConfig,
 } from '../types'
 
 class ServerInformation implements Command {
-  name = 'server-information'
-  aliases = ['serverinfo', 'svinfo']
-  description = 'Show information about this server'
-  minArguments = 0
-  usage = 'server-information'
-  run({ message, embed }: RunConfig) {
-    const informations: ServerInformationType = {
+  constructor(private commandConfig: CommandConfig) {}
+
+  static named = 'server-information'
+  static aliases = ['serverinfo', 'svinfo']
+  static description = 'Show information about this server'
+  static minArguments = 0
+  static usage = 'server-information'
+
+  async run() {
+    const { embed, message } = this.commandConfig
+
+    const infos: ServerInformationType = {
       name: message.guild.name,
       icon: message.guild.iconURL(),
       ownerNickname: message.guild.owner.user.tag,
@@ -30,19 +35,19 @@ class ServerInformation implements Command {
 
     embed
       .setTitle('')
-      .setAuthor(informations.name)
-      .setThumbnail(informations.icon)
-      .addField('Owner', informations.ownerNickname)
-      .addField('Created', informations.created)
-      .addField('Region', informations.region, true)
-      .addField('Members', informations.members, true)
-      .addField('Channels', informations.channels, true)
-    informations.premiumSubscriptionCount &&
+      .setAuthor(infos.name)
+      .setThumbnail(infos.icon)
+      .addField('Owner', infos.ownerNickname)
+      .addField('Created', infos.created)
+      .addField('Region', infos.region, true)
+      .addField('Members', infos.members, true)
+      .addField('Channels', infos.channels, true)
+    infos.premiumSubscriptionCount &&
       embed.addField(
         'Premium Subscription Count',
-        informations.premiumSubscriptionCount
+        infos.premiumSubscriptionCount
       )
-    embed.addField('ID', informations.id)
+    embed.addField('ID', infos.id)
 
     return embed
   }

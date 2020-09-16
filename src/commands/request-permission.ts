@@ -1,29 +1,90 @@
-import { CollectorFilter, User, MessageReaction, GuildMember } from 'discord.js'
+import {
+  CollectorFilter,
+  User,
+  MessageReaction,
+  GuildMember,
+  PermissionString,
+} from 'discord.js'
 
 import commands from '.'
 import onCallCommand from '../tools/onCallCommand'
-import { Command, RunConfig } from '../types'
+import { Command, CommandConfig, CommandClass } from '../types'
+
+interface NeedPermissions {
+  ({ member, Command }: { member: GuildMember; Command: Command }):
+    | []
+    | PermissionString[]
+}
 
 class RequestPermission implements Command {
-  name = 'request-permission'
-  aliases = ['req-perm', 'reqp']
-  description = 'Request permission to perform certain command.'
-  minArguments = 1
-  usage = 'request-permission [command]'
-  example = 'request-permission clear 10'
-  async run({ message, embed, messageArgs }: RunConfig) {
+  private commandConfig: CommandConfig
+  private Command: CommandClass
+  private requestRun: string
+
+  constructor({ embed, message, messageArgs }: CommandConfig) {
+    this.commandConfig = {
+      embed,
+      message,
+      messageArgs: messageArgs.slice(1, messageArgs.length),
+    }
+
+    this.Command = commands.filter(
+      cmd =>
+        cmd.name === this.commandConfig.messageArgs[0] ||
+        cmd.aliases.includes(this.commandConfig.messageArgs[0])
+    )[0]
+
+    this.requestRun = this.commandConfig.messageArgs.join(' ')
+  }
+
+  static named = 'request-permission'
+  static aliases = ['req-perm', 'reqp']
+  static description = 'Request permission to perform certain command.'
+  static minArguments = 1
+  static usage = 'request-permission [command]'
+  static example = 'request-permission clear 10'
+
+  needPermissions({ member, Command }): NeedPermissions {
+    return (
+      Command.permissions?.filter(perm => !member.hasPermission(perm)) || []
+    )
+  }
+
+  validator() {
+    const { message } = this.commandConfig
+
     const description: string[] = []
 
-    messageArgs = messageArgs.slice(1, messageArgs.length)
-    const requestRun = messageArgs.join(' ')
+    const userHavePermission = !this.needPermissions({
+      member: message.guild.members.resolve(message.author.id),
+      Command: this.Command,
+    }).length
 
-    const command = commands.filter(
-      cmd => cmd.name === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
-    )[0]
+    switch (true) {
+      case !!this.Command?.permissions?.length:
+        description.push(
+          `:red_circle: Not is required permission to run: \`\`${this.requestRun}\`\``
+        )
+        break
+
+      case userHavePermission:
+        description.push(
+          `:red_circle: You already have permission to run: \`\`${this.requestRun}\`\``
+        )
+        break
+    }
+    return description
+  }
+
+  async run() {
+    const { messageArgs, embed, message } = this.commandConfig
+
+    const description: string[] = []
 
     const invalidCallCommand = onCallCommand.invalidCall({
       embed,
-      command,
+      message,
+      Command: this.Command,
       messageArgs,
       permissions: {
         user: message.guild.me.permissions.toArray(),
@@ -33,33 +94,13 @@ class RequestPermission implements Command {
 
     if (invalidCallCommand) return invalidCallCommand
 
-    const needPermissions = (member: GuildMember) =>
-      command.permissions?.filter(perm => !member.hasPermission(perm)) || []
-
-    const userHavePermission = !needPermissions(
-      message.guild.members.resolve(message.author.id)
-    ).length
-
-    if (!command.permissions) {
-      embed.setDescription(
-        `:nazar_amulet: Not is required permission to run: \`\`${requestRun}\`\``
-      )
-
-      return embed
-    }
-
-    if (userHavePermission) {
-      embed.setDescription(
-        `:nazar_amulet: You already have permission to run: \`\`${requestRun}\`\``
-      )
-
-      return embed
-    }
-
     const filter: CollectorFilter = (reaction: MessageReaction, user: User) => {
       const member = message.guild.members.resolve(user.id)
 
-      const havePermission = !needPermissions(member).length
+      const havePermission = !this.needPermissions({
+        member,
+        Command: this.Command,
+      }).length
 
       return (
         ['👍', '👎'].includes(reaction.emoji.name) &&
@@ -69,7 +110,7 @@ class RequestPermission implements Command {
     }
 
     embed.setDescription(
-      `:nazar_amulet: <@${message.author.id}> request run: \`\`${requestRun}\`\``
+      `:nazar_amulet: <@${message.author.id}> request run: \`\`${this.requestRun}\`\``
     )
 
     const confirmMessage = await message.channel.send(embed)
@@ -86,15 +127,19 @@ class RequestPermission implements Command {
 
         if (reaction.emoji.name === '👍') {
           description.push(
-            `:white_check_mark: <@${userAccepted.id}> accepted <@${message.author.id}> run: \`\`${requestRun}\`\``
+            `:white_check_mark: <@${userAccepted.id}> accepted <@${message.author.id}> run: \`\`${this.requestRun}\`\``
           )
 
-          const returnEmbed = await command.run({ message, embed, messageArgs })
+          const returnEmbed = await new this.Command({
+            embed,
+            message,
+            messageArgs,
+          }).run()
 
-          returnEmbed && message.channel.send(returnEmbed)
+          returnEmbed && (await message.channel.send(returnEmbed))
         } else {
           description.push(
-            `:x: <@${userAccepted.id}> recused <@${message.author.id}> run: \`\`${requestRun}\`\``
+            `:x: <@${userAccepted.id}> recused <@${message.author.id}> run: \`\`${this.requestRun}\`\``
           )
           embed.setColor('#E81010')
         }
