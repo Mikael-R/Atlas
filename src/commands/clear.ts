@@ -17,7 +17,7 @@ class Clear implements Command {
   static example = 'clear 7'
 
   validator() {
-    return this.limit < 0 || this.limit > 4096 || isNaN(this.limit)
+    return this.limit <= 0 || this.limit > 4096 || isNaN(this.limit)
       ? [
           ':red_circle: You not informed a valid value',
           ':red_circle: Use low numbers greater than zero',

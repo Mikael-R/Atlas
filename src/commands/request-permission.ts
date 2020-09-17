@@ -11,7 +11,7 @@ import onCallCommand from '../tools/onCallCommand'
 import { Command, CommandConfig, CommandClass } from '../types'
 
 interface NeedPermissions {
-  ({ member, Command }: { member: GuildMember; Command: Command }):
+  ({ member, Command }: { member: GuildMember; Command: CommandClass }):
     | []
     | PermissionString[]
 }
@@ -44,36 +44,31 @@ class RequestPermission implements Command {
   static usage = 'request-permission [command]'
   static example = 'request-permission clear 10'
 
-  needPermissions({ member, Command }): NeedPermissions {
-    return (
-      Command.permissions?.filter(perm => !member.hasPermission(perm)) || []
-    )
-  }
+  private needPermissions: NeedPermissions = ({ member, Command }) =>
+    Command.permissions?.filter(perm => !member.hasPermission(perm)) || []
 
   validator() {
     const { message } = this.commandConfig
 
-    const description: string[] = []
-
-    const userHavePermission = !this.needPermissions({
+    const userNeedPermissions = this.needPermissions({
       member: message.guild.members.resolve(message.author.id),
       Command: this.Command,
-    }).length
+    })
 
     switch (true) {
-      case !!this.Command?.permissions?.length:
-        description.push(
-          `:red_circle: Not is required permission to run: \`\`${this.requestRun}\`\``
-        )
-        break
+      case !this.Command?.permissions.length:
+        return [
+          `:red_circle: Not is required permission to run: \`\`${this.requestRun}\`\``,
+        ]
 
-      case userHavePermission:
-        description.push(
-          `:red_circle: You already have permission to run: \`\`${this.requestRun}\`\``
-        )
-        break
+      case !userNeedPermissions.length:
+        return [
+          `:red_circle: You already have permission to run: \`\`${this.requestRun}\`\``,
+        ]
+
+      default:
+        return []
     }
-    return description
   }
 
   async run() {
