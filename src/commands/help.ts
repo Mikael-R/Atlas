@@ -2,13 +2,14 @@ import { PermissionString, EmbedFieldData } from 'discord.js'
 
 import commands from '.'
 import { flag } from '../preferences.json'
+import replaceAll from '../tools/replaceAll'
 import { Command, CommandConfig, CommandClass } from '../types'
 import listItems from '../utils/listItems'
 
 class Help implements Command {
   constructor(protected commandConfig: CommandConfig) {}
 
-  static named = 'help'
+  static commandName = 'help'
   static aliases = ['h']
   static description =
     'Show commands or more information about specific command'
@@ -29,7 +30,8 @@ class Help implements Command {
     const pageIndex = Number(messageArgs[1])
     const Command = commands.filter(
       cmd =>
-        cmd.named === messageArgs[1] || cmd.aliases.includes(messageArgs[1])
+        cmd.commandName === messageArgs[1] ||
+        cmd.aliases.includes(messageArgs[1])
     )[0]
 
     const commandsToPage: CommandClass[] = listItems(
@@ -40,16 +42,16 @@ class Help implements Command {
 
     switch (true) {
       case !!pageIndex:
-        commandsToPage.forEach(({ named, description }) =>
-          fields.push({ name: named, value: description })
+        commandsToPage.forEach(({ commandName, description }) =>
+          fields.push({ name: commandName, value: description })
         )
         break
 
       case !!Command:
-        fields.push({ name: 'Name', value: `**${Command.name}**` })
+        fields.push({ name: 'Name', value: `**${Command.commandName}**` })
         fields.push({
           name: 'Aliases',
-          value: Command.aliases.toString().replace(',', ', '),
+          value: replaceAll(Command.aliases, ',', ', '),
         })
         fields.push({
           name: 'Description',
@@ -58,11 +60,11 @@ class Help implements Command {
         Command.permissions &&
           fields.push({
             name: 'Permissions',
-            value: Command.permissions
-              .toString()
-              .toLowerCase()
-              .replace('_', ' ')
-              .replace(',', ', '),
+            value: replaceAll(
+              replaceAll(Command.permissions, '_', ' '),
+              ',',
+              ', '
+            ).toLowerCase(),
           })
         fields.push({
           name: 'Usage',
@@ -76,8 +78,8 @@ class Help implements Command {
         break
 
       default:
-        commandsToPage.forEach(({ named, description }) =>
-          fields.push({ name: named, value: description })
+        commandsToPage.forEach(({ commandName, description }) =>
+          fields.push({ name: commandName, value: description })
         )
     }
 

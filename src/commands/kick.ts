@@ -11,7 +11,7 @@ class Kick implements Command {
       guild.members.resolve(commandConfig.messageArgs[1])
   }
 
-  static named = 'kick'
+  static commandName = 'kick'
   static aliases = ['k', 'kck']
   static description = 'Kick user from server'
   static minArguments = 1

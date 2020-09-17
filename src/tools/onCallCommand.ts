@@ -1,5 +1,6 @@
 import { flag } from '../preferences.json'
 import { IsCall, InvalidCall, ErrorToRun } from '../types'
+import replaceAll from './replaceAll'
 
 const isCall: IsCall = (message, messageArgs) => {
   return !(
@@ -45,19 +46,21 @@ const invalidCall: InvalidCall = ({
 
     case !!needPermissions.bot.length:
       description.push(
-        `:red_circle: I need permissions: \`\`${needPermissions.user
-          .toString()
-          .toLowerCase()
-          .replace(',', ', ')}\`\``
+        `:red_circle: I need permissions: \`\`${replaceAll(
+          needPermissions.user,
+          ',',
+          ', '
+        )}\`\``
       )
       break
 
     case !!needPermissions.user.length:
       description.push(
-        `:red_circle: You need permissions: \`\`${needPermissions.user
-          .toString()
-          .toLowerCase()
-          .replace(',', ', ')}\`\``
+        `:red_circle: You need permissions: \`\`${replaceAll(
+          needPermissions.user,
+          ',',
+          ', '
+        )}\`\``
       )
       description.push(
         `:red_circle: Try run: \`\`${flag}request-permission ${messageArgs.join(
@@ -75,7 +78,7 @@ const invalidCall: InvalidCall = ({
 
   description.push(
     `:red_circle: Use **${flag}help ${
-      Command?.name || ''
+      Command?.commandName || ''
     }** for more information's`
   )
 
@@ -89,7 +92,7 @@ const errorToRun: ErrorToRun = ({ embed, error }) => {
   const description: string[] = []
 
   description.push(':red_circle: Sorry, something went wrong')
-  description.push(`:interrobang: \`\`${error.message}\`\``)
+  description.push(`:interrobang: ${error.name}: \`\`${error.message}\`\``)
 
   embed.setColor('#E81010')
   embed.setDescription(description.join('\n\n'))

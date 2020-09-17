@@ -16,7 +16,7 @@ class UserInformation implements Command {
       message.author
   }
 
-  static named = 'user-information'
+  static commandName = 'user-information'
   static aliases = ['userinfo', 'usinfo']
   static description = 'Show information about you or user mentioned'
   static minArguments = 0
@@ -25,7 +25,10 @@ class UserInformation implements Command {
   static example = 'user-information 736626386009194676'
 
   async run() {
-    const { embed, message } = this.commandConfig
+    const {
+      embed,
+      message: { guild },
+    } = this.commandConfig
 
     const infos: UserInformationType = {
       tag: this.user.tag,
@@ -33,12 +36,10 @@ class UserInformation implements Command {
       status: this.user.presence.status,
       isBot: this.user.bot,
       createAccount: this.user.createdAt.toUTCString(),
-      joined: message.guild.members
-        .resolve(this.user.id)
-        .joinedAt.toUTCString(),
+      joined: guild.members.resolve(this.user.id).joinedAt.toUTCString(),
       roles: (() => {
         const ignoreRoles = ['@everyone']
-        return message.guild.members
+        return guild.members
           .resolve(this.user.id)
           .roles.cache.filter(
             role => !role.deleted && !ignoreRoles.includes(role.name)

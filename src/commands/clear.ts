@@ -8,7 +8,7 @@ class Clear implements Command {
     this.limit = Number(commandConfig.messageArgs[1])
   }
 
-  static named = 'clear'
+  static commandName = 'clear'
   static aliases = ['c', 'cls']
   static description = 'Delete previous messages'
   static permissions: PermissionString[] = ['MANAGE_MESSAGES']

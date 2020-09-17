@@ -7,30 +7,33 @@ import {
 class ServerInformation implements Command {
   constructor(private commandConfig: CommandConfig) {}
 
-  static named = 'server-information'
+  static commandName = 'server-information'
   static aliases = ['serverinfo', 'svinfo']
   static description = 'Show information about this server'
   static minArguments = 0
   static usage = 'server-information'
 
   async run() {
-    const { embed, message } = this.commandConfig
+    const {
+      embed,
+      message: { guild },
+    } = this.commandConfig
 
     const infos: ServerInformationType = {
-      name: message.guild.name,
-      icon: message.guild.iconURL(),
-      ownerNickname: message.guild.owner.user.tag,
-      created: message.guild.createdAt.toUTCString(),
-      region: message.guild.region,
-      members: message.guild.memberCount,
+      name: guild.name,
+      icon: guild.iconURL(),
+      ownerNickname: guild.owner.user.tag,
+      created: guild.createdAt.toUTCString(),
+      region: guild.region,
+      members: guild.memberCount,
       channels: (() => {
-        const existingChannels = message.guild.channels.cache.filter(
+        const existingChannels = guild.channels.cache.filter(
           channel => channel.deleted === false && channel.type !== 'category'
         )
         return existingChannels.size
       })(),
-      premiumSubscriptionCount: message.guild.premiumSubscriptionCount,
-      id: message.guild.id,
+      premiumSubscriptionCount: guild.premiumSubscriptionCount,
+      id: guild.id,
     }
 
     embed

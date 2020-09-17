@@ -50,7 +50,8 @@ client.on('message', async message => {
   })
 
   const Command = commands.filter(
-    cmd => cmd.name === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
+    cmd =>
+      cmd.commandName === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
   )[0]
 
   if (!Command) return null
@@ -86,7 +87,7 @@ client.on('message', async message => {
 
   if (returnEmbed) {
     returnEmbed.setFooter(
-      `Command requested by: ${message.author.username}`,
+      `Command requested by: ${message.author.tag}`,
       message.author.avatarURL()
     )
 

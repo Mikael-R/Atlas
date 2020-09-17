@@ -3,7 +3,7 @@ import { Command, CommandConfig } from '../types'
 class Ping implements Command {
   constructor(private commandConfig: CommandConfig) {}
 
-  static named = 'ping'
+  static commandName = 'ping'
   static aliases = ['p', 'pong', 'latency']
   static description = 'Show bot ping in milliseconds on send message'
   static minArguments = 0

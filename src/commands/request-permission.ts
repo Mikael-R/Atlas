@@ -30,14 +30,14 @@ class RequestPermission implements Command {
 
     this.Command = commands.filter(
       cmd =>
-        cmd.name === this.commandConfig.messageArgs[0] ||
+        cmd.commandName === this.commandConfig.messageArgs[0] ||
         cmd.aliases.includes(this.commandConfig.messageArgs[0])
     )[0]
 
     this.requestRun = this.commandConfig.messageArgs.join(' ')
   }
 
-  static named = 'request-permission'
+  static commandName = 'request-permission'
   static aliases = ['req-perm', 'reqp']
   static description = 'Request permission to perform certain command.'
   static minArguments = 1

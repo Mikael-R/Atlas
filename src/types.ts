@@ -8,7 +8,7 @@ import {
 
 export interface CommandClass {
   new (CommandConfig: CommandConfig): Command
-  named: string
+  commandName: string
   aliases: string[]
   description: string
   permissions?: PermissionString[]
