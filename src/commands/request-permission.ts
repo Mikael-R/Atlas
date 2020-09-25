@@ -113,25 +113,34 @@ class RequestPermission implements Command {
     await confirmMessage.react('👍')
     await confirmMessage.react('👎')
 
+    const commandInitialized = new this.Command({
+      embed,
+      message: confirmMessage,
+      messageArgs,
+    })
+
     await confirmMessage
-      .awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
+      .awaitReactions(filter, {
+        max: 1,
+        time: 60000, // milliseconds
+        errors: ['time'],
+      })
       .then(async collected => {
         const reaction = collected.first()
 
         const userAccepted = reaction.users.cache.last()
 
         if (reaction.emoji.name === '👍') {
+          const returnEmbed = await commandInitialized.run()
+
+          if (returnEmbed) {
+            const returnEmbedDescription = returnEmbed.description.split('\n\n')
+
+            returnEmbedDescription.forEach(desc => description.push(desc))
+          }
           description.push(
             `:white_check_mark: <@${userAccepted.id}> accepted <@${message.author.id}> run: \`\`${this.requestRun}\`\``
           )
-
-          const returnEmbed = await new this.Command({
-            embed,
-            message,
-            messageArgs,
-          }).run()
-
-          returnEmbed && (await message.channel.send(returnEmbed))
         } else {
           description.push(
             `:x: <@${userAccepted.id}> recused <@${message.author.id}> run: \`\`${this.requestRun}\`\``
@@ -143,11 +152,15 @@ class RequestPermission implements Command {
         description.push(':red_circle: Time is over')
         embed.setColor('#E81010')
       })
-      .finally(() => {
+      .finally(async () => {
         if (confirmMessage.editable) {
           embed.setDescription(description.join('\n\n'))
-          confirmMessage.edit(embed)
-          confirmMessage.reactions.removeAll()
+          embed.setFooter(
+            `Command requested by: ${message.author.tag}`,
+            message.author.avatarURL()
+          )
+          await confirmMessage.reactions.removeAll()
+          await confirmMessage.edit(embed)
         }
       })
   }

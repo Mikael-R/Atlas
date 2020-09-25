@@ -2,9 +2,9 @@ import { PermissionString, EmbedFieldData } from 'discord.js'
 
 import commands from '.'
 import { flag } from '../preferences.json'
-import replaceAll from '../tools/replaceAll'
 import { Command, CommandConfig, CommandClass } from '../types'
 import listItems from '../utils/listItems'
+import replaceAll from '../utils/replaceAll'
 
 class Help implements Command {
   constructor(protected commandConfig: CommandConfig) {}
@@ -51,7 +51,7 @@ class Help implements Command {
         fields.push({ name: 'Name', value: `**${Command.commandName}**` })
         fields.push({
           name: 'Aliases',
-          value: replaceAll(Command.aliases, ',', ', '),
+          value: replaceAll(Command.aliases.toString(), ',', ', '),
         })
         fields.push({
           name: 'Description',
@@ -61,7 +61,7 @@ class Help implements Command {
           fields.push({
             name: 'Permissions',
             value: replaceAll(
-              replaceAll(Command.permissions, '_', ' '),
+              replaceAll(Command.permissions.toString(), '_', ' '),
               ',',
               ', '
             ).toLowerCase(),
