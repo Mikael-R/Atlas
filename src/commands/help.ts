@@ -1,6 +1,6 @@
 import { PermissionString, EmbedFieldData } from 'discord.js'
 
-import commands from '.'
+import { findCommand, commands } from '.'
 import { flag } from '../preferences.json'
 import { Command, CommandConfig, CommandClass } from '../types'
 import listItems from '../utils/listItems'
@@ -28,11 +28,7 @@ class Help implements Command {
     const maxCommandsInPage = 5
 
     const pageIndex = Number(messageArgs[1])
-    const Command = commands.filter(
-      cmd =>
-        cmd.commandName === messageArgs[1] ||
-        cmd.aliases.includes(messageArgs[1])
-    )[0]
+    const Command = findCommand(messageArgs[1])
 
     const commandsToPage: CommandClass[] = listItems(
       commands,
@@ -42,9 +38,10 @@ class Help implements Command {
 
     switch (true) {
       case !!pageIndex:
-        commandsToPage.forEach(({ commandName, description }) =>
+        commandsToPage.forEach(cmd => {
+          const { commandName, description } = cmd[1]
           fields.push({ name: commandName, value: description })
-        )
+        })
         break
 
       case !!Command:
@@ -78,9 +75,10 @@ class Help implements Command {
         break
 
       default:
-        commandsToPage.forEach(({ commandName, description }) =>
+        commandsToPage.forEach(cmd => {
+          const { commandName, description } = cmd[1]
           fields.push({ name: commandName, value: description })
-        )
+        })
     }
 
     embed.setDescription(description.join('\n\n'))

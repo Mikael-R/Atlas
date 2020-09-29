@@ -1,17 +1,34 @@
-import { readdirSync } from 'fs'
+import requireDirectory, { RequireDirectoryOptions } from 'require-directory'
 
 import { CommandClass } from '../types'
 
-const commands: CommandClass[] = []
-const exclude = ['index.ts', 'index.js']
-const dir = readdirSync(__dirname).filter(file => !exclude.includes(file))
-
-for (const file of dir) {
-  const Command: CommandClass | undefined = require(`${__dirname}/${file}`)
-    .default
-
-  if (!Command) console.log(`Command ${__dirname}/${file} need default export`)
-  else commands.push(Command)
+interface CommandEntries {
+  '0': string
+  '1': CommandClass
 }
 
-export default commands
+const options: RequireDirectoryOptions<any, any> = {
+  extensions: ['ts', 'js'],
+  visit: obj => obj?.default,
+  exclude: /^index\.[jt]s$/,
+  recurse: false,
+}
+
+const commandsInDirectory = requireDirectory(module, '.', options)
+
+const commands = Object.entries(commandsInDirectory).map(
+  (cmd: CommandEntries) => {
+    cmd['0'] = [cmd['1'].commandName, ...cmd['1'].aliases].toString()
+    return cmd
+  }
+)
+
+const findCommand = (commandNameOrAliasse: string): null | CommandClass => {
+  const foundCommand = commands.filter(cmd =>
+    cmd[0].includes(commandNameOrAliasse)
+  )
+  const Command = foundCommand[0] ? foundCommand[0][1] : null
+  return Command
+}
+
+export { commands, findCommand }

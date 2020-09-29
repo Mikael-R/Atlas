@@ -2,7 +2,7 @@ import 'dotenv/config'
 
 import { Client, MessageEmbed } from 'discord.js'
 
-import commands from './commands/index'
+import { findCommand } from './commands/index'
 import { flag } from './preferences.json'
 import onCallCommand from './tools/onCallCommand'
 import onServer from './tools/onServer'
@@ -49,10 +49,7 @@ client.on('message', async message => {
     color: '#1213BD',
   })
 
-  const Command = commands.filter(
-    cmd =>
-      cmd.commandName === messageArgs[0] || cmd.aliases.includes(messageArgs[0])
-  )[0]
+  const Command = findCommand(messageArgs[0])
 
   if (!Command) return null
 

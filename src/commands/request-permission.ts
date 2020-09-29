@@ -6,7 +6,7 @@ import {
   PermissionString,
 } from 'discord.js'
 
-import commands from '.'
+import { findCommand } from '.'
 import onCallCommand from '../tools/onCallCommand'
 import { Command, CommandConfig, CommandClass } from '../types'
 
@@ -28,11 +28,7 @@ class RequestPermission implements Command {
       messageArgs: messageArgs.slice(1, messageArgs.length),
     }
 
-    this.Command = commands.filter(
-      cmd =>
-        cmd.commandName === this.commandConfig.messageArgs[0] ||
-        cmd.aliases.includes(this.commandConfig.messageArgs[0])
-    )[0]
+    this.Command = findCommand(messageArgs[0])
 
     this.requestRun = this.commandConfig.messageArgs.join(' ')
   }
