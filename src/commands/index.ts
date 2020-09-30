@@ -1,34 +1,29 @@
-import requireDirectory, { RequireDirectoryOptions } from 'require-directory'
+import { Collection } from 'discord.js'
+import { readdirSync } from 'fs'
 
 import { CommandClass } from '../types'
 
-interface CommandEntries {
-  '0': string
-  '1': CommandClass
-}
+const excludeRegex = /^index\.[jt]s$/
+const includeRegex = /.+\.[jt]s$/
 
-const options: RequireDirectoryOptions<any, any> = {
-  extensions: ['ts', 'js'],
-  visit: obj => obj?.default,
-  exclude: /^index\.[jt]s$/,
-  recurse: false,
-}
-
-const commandsInDirectory = requireDirectory(module, '.', options)
-
-const commands = Object.entries(commandsInDirectory).map(
-  (cmd: CommandEntries) => {
-    cmd['0'] = [cmd['1'].commandName, ...cmd['1'].aliases].toString()
-    return cmd
-  }
+const commandFiles = readdirSync(__dirname).filter(
+  filename => includeRegex.test(filename) && !excludeRegex.test(filename)
 )
 
-const findCommand = (commandNameOrAliasse: string): null | CommandClass => {
-  const foundCommand = commands.filter(cmd =>
-    cmd[0].includes(commandNameOrAliasse)
-  )
-  const Command = foundCommand[0] ? foundCommand[0][1] : null
-  return Command
+const commands: Collection<string[], CommandClass> = new Collection()
+
+for (const filename of commandFiles) {
+  const Command: CommandClass | undefined = require(`./${filename}`)?.default
+
+  if (Command) {
+    const key = [Command.commandName]
+    Command?.aliases?.forEach(v => key.push(v))
+    commands.set(key, Command)
+  }
+}
+
+const findCommand = (nameOrAliasse: string) => {
+  return commands.find((v, k) => k.includes(nameOrAliasse))
 }
 
 export { commands, findCommand }

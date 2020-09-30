@@ -31,25 +31,25 @@ class Help implements Command {
     const Command = findCommand(messageArgs[1])
 
     const commandsToPage: CommandClass[] = listItems(
-      commands,
+      commands.array(),
       pageIndex || 1,
       maxCommandsInPage
     )
 
     switch (true) {
       case !!pageIndex:
-        commandsToPage.forEach(cmd => {
-          const { commandName, description } = cmd[1]
+        commandsToPage.forEach(({ commandName, description }) =>
           fields.push({ name: commandName, value: description })
-        })
+        )
         break
 
       case !!Command:
         fields.push({ name: 'Name', value: `**${Command.commandName}**` })
-        fields.push({
-          name: 'Aliases',
-          value: replaceAll(Command.aliases.toString(), ',', ', '),
-        })
+        Command.aliases &&
+          fields.push({
+            name: 'Aliases',
+            value: replaceAll(Command.aliases?.toString() || '', ',', ', '),
+          })
         fields.push({
           name: 'Description',
           value: Command.description,
@@ -75,12 +75,12 @@ class Help implements Command {
         break
 
       default:
-        commandsToPage.forEach(cmd => {
-          const { commandName, description } = cmd[1]
+        commandsToPage.forEach(({ commandName, description }) =>
           fields.push({ name: commandName, value: description })
-        })
+        )
     }
 
+    console.log(fields)
     embed.setDescription(description.join('\n\n'))
     embed.addFields(fields)
 
