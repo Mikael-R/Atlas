@@ -43,6 +43,8 @@ git clone https://github.com/Mikael-R/aziris
 cd aziris
 ```
 
+#### Using Node.js
+
 - Create a bot in discord developers
 - Generate bot token and copy token in .env file, check file env with [example](.env.example)
 - Generate convite link to add bot in servers
@@ -51,12 +53,33 @@ Obs: Search in discord developers [oficial documentation](https://discord.com/de
 
 - Install dependencies
 ```sh
-yarn install  # or npm install
+yarn  # or npm install
 ```
 
-- Execute
+##### Dev Mode
+
+```sh
+yarn dev # or npm run dev
+```
+
+##### Production Mode
+
 ```sh
 yarn prod  # or npm run prod
+```
+
+#### Using Docker (with docker-compose)
+
+##### Dev Mode
+
+```sh
+docker-compose up # (optional -d to run in background)
+```
+
+##### Production Mode
+
+```sh
+docker-compose up -f docker-compose.prod.yml # (optional -d to run in background)
 ```
 
 #### 🌐 Online
