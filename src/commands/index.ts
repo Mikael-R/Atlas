@@ -32,6 +32,6 @@ const run = (dirname: string) => {
   dirs.forEach(dirPath => run(dirPath))
 }
 
-run(global.__dirname)
+run(__dirname)
 
 export { commands, findCommand }
