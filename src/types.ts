@@ -4,7 +4,11 @@ import {
   Message,
   Collection,
   Role,
+  VoiceConnection,
+  StreamOptions,
+  VoiceBroadcast,
 } from 'discord.js'
+import internal from 'stream'
 
 export interface CommandClass {
   new (CommandConfig: CommandConfig): Command
@@ -80,4 +84,12 @@ export interface ServerInformation {
 
 export interface OnServer {
   (embed: MessageEmbed, ownerName: string, serverName: string): MessageEmbed
+}
+
+export interface PlayMusic {
+  (
+    connection: VoiceConnection,
+    stream: string | internal.Readable | VoiceBroadcast,
+    streamOptions?: StreamOptions
+  ): void
 }
