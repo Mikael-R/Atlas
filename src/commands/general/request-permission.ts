@@ -6,9 +6,10 @@ import {
   PermissionString,
 } from 'discord.js'
 
-import { findCommand } from '.'
-import onCallCommand from '../tools/onCallCommand'
-import { Command, CommandConfig, CommandClass } from '../types'
+import { findCommand } from '..'
+
+import onCallCommand from '../../tools/onCallCommand'
+import { Command, CommandConfig, CommandClass } from '../../types'
 
 interface NeedPermissions {
   ({ member, Command }: { member: GuildMember; Command: CommandClass }):

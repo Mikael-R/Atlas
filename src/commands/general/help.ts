@@ -1,10 +1,10 @@
 import { PermissionString, EmbedFieldData } from 'discord.js'
 
-import { findCommand, commands } from '.'
-import { flag } from '../preferences.json'
-import { Command, CommandConfig, CommandClass } from '../types'
-import listItems from '../utils/listItems'
-import replaceAll from '../utils/replaceAll'
+import { findCommand, commands } from '../../commands'
+import { flag } from '../../preferences.json'
+import { Command, CommandConfig, CommandClass } from '../../types'
+import listItems from '../../utils/listItems'
+import replaceAll from '../../utils/replaceAll'
 
 class Help implements Command {
   constructor(protected commandConfig: CommandConfig) {}

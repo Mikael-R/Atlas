@@ -2,7 +2,7 @@ import {
   Command,
   ServerInformation as ServerInformationType,
   CommandConfig,
-} from '../types'
+} from '../../types'
 
 class ServerInformation implements Command {
   constructor(private commandConfig: CommandConfig) {}

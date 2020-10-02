@@ -4,7 +4,7 @@ import {
   Command,
   UserInformation as UserInformationType,
   CommandConfig,
-} from '../types'
+} from '../../types'
 
 class UserInformation implements Command {
   private user: User

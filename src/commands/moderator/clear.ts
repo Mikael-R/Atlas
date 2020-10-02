@@ -1,6 +1,6 @@
 import { Collection, Message, PermissionString, TextChannel } from 'discord.js'
 
-import { Command, CommandConfig } from '../types'
+import { Command, CommandConfig } from '../../types'
 
 class Clear implements Command {
   private limit: number
