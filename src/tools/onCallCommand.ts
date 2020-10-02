@@ -11,7 +11,7 @@ const isCall: IsCall = (message, messageArgs) => {
   )
 }
 
-const invalidCall: InvalidCall = ({
+const invalidCall: InvalidCall = async ({
   embed,
   message,
   Command,
@@ -32,7 +32,7 @@ const invalidCall: InvalidCall = ({
   const commandInitialized = new Command({ message, embed, messageArgs })
 
   const validation = commandInitialized.validator
-    ? commandInitialized?.validator()
+    ? await commandInitialized?.validator()
     : []
 
   switch (true) {

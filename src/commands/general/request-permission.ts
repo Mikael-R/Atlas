@@ -28,9 +28,7 @@ class RequestPermission implements Command {
       message,
       messageArgs: messageArgs.slice(1, messageArgs.length),
     }
-
     this.Command = findCommand(messageArgs[0])
-
     this.requestRun = this.commandConfig.messageArgs.join(' ')
   }
 
@@ -45,22 +43,29 @@ class RequestPermission implements Command {
     Command.permissions?.filter(perm => !member.hasPermission(perm)) || []
 
   validator() {
-    const { message } = this.commandConfig
+    const {
+      commandConfig: {
+        message: { guild, author },
+      },
+      needPermissions,
+      Command,
+      requestRun,
+    } = this
 
-    const userNeedPermissions = this.needPermissions({
-      member: message.guild.members.resolve(message.author.id),
-      Command: this.Command,
+    const userNeedPermissions = needPermissions({
+      member: guild.members.resolve(author.id),
+      Command,
     })
 
     switch (true) {
-      case !this.Command?.permissions.length:
+      case !Command?.permissions.length:
         return [
-          `:red_circle: Not is required permission to run: \`\`${this.requestRun}\`\``,
+          `:red_circle: Not is required permission to run: \`\`${requestRun}\`\``,
         ]
 
       case !userNeedPermissions.length:
         return [
-          `:red_circle: You already have permission to run: \`\`${this.requestRun}\`\``,
+          `:red_circle: You already have permission to run: \`\`${requestRun}\`\``,
         ]
 
       default:
@@ -69,14 +74,17 @@ class RequestPermission implements Command {
   }
 
   async run() {
-    const { messageArgs, embed, message } = this.commandConfig
+    const {
+      commandConfig: { messageArgs, embed, message },
+      Command,
+    } = this
 
     const description: string[] = []
 
-    const invalidCallCommand = onCallCommand.invalidCall({
+    const invalidCallCommand = await onCallCommand.invalidCall({
       embed,
       message,
-      Command: this.Command,
+      Command,
       messageArgs,
       permissions: {
         user: message.guild.me.permissions.toArray(),
@@ -89,10 +97,7 @@ class RequestPermission implements Command {
     const filter: CollectorFilter = (reaction: MessageReaction, user: User) => {
       const member = message.guild.members.resolve(user.id)
 
-      const havePermission = !this.needPermissions({
-        member,
-        Command: this.Command,
-      }).length
+      const havePermission = !this.needPermissions({ member, Command })
 
       return (
         ['👍', '👎'].includes(reaction.emoji.name) &&

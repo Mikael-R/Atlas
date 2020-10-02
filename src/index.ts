@@ -53,7 +53,7 @@ client.on('message', async message => {
 
   if (!Command) return null
 
-  const invalidCallCommand = onCallCommand.invalidCall({
+  const invalidCallCommand = await onCallCommand.invalidCall({
     embed,
     message,
     Command,
@@ -88,7 +88,7 @@ client.on('message', async message => {
       message.author.avatarURL()
     )
 
-    await message.channel.send(returnEmbed)
+    await message.reply(returnEmbed)
   }
 })
 

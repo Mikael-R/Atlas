@@ -22,7 +22,7 @@ export interface CommandClass {
 }
 
 export interface Command {
-  validator?: () => string[] | []
+  validator?: () => Promise<string[] | []> | string[] | []
   run: () => void | MessageEmbed | Promise<MessageEmbed>
 }
 
@@ -52,7 +52,7 @@ export interface InvalidCall {
       user: PermissionString[]
       bot: PermissionString[]
     }
-  }): MessageEmbed
+  }): Promise<MessageEmbed> | MessageEmbed
 }
 
 export interface ErrorToRun {

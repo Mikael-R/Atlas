@@ -11,9 +11,7 @@ class Help implements Command {
 
   static commandName = 'help'
   static aliases = ['h']
-  static description =
-    'Show commands or more information about specific command'
-
+  static description = 'Show commands or more information about  command'
   static minArguments = 0
   static permissions: PermissionString[]
   static usage = 'help [command, page number]'
@@ -80,7 +78,6 @@ class Help implements Command {
         )
     }
 
-    console.log(fields)
     embed.setDescription(description.join('\n\n'))
     embed.addFields(fields)
 
