@@ -1,19 +1,18 @@
 import { Collection } from 'discord.js'
-import { readdirSync } from 'fs'
 
 import { CommandClass } from '../types'
-
-const excludeRegex = /^index\.[jt]s$/
-const includeRegex = /.+\.[jt]s$/
-
-const commandFiles = readdirSync(__dirname).filter(
-  filename => includeRegex.test(filename) && !excludeRegex.test(filename)
-)
+import listDir from '../utils/listDir'
 
 const commands: Collection<string[], CommandClass> = new Collection()
 
-for (const filename of commandFiles) {
-  const Command: CommandClass | undefined = require(`./${filename}`)?.default
+const excludeFiles = /index\.[jt]s$/
+const includeFiles = /.+\.[jt]s$/
+
+const findCommand = (nameOrAliasse: string) =>
+  commands.find((v, k) => k.includes(nameOrAliasse))
+
+const addCommand = (filePath: string) => {
+  const Command: CommandClass | undefined = require(filePath)?.default
 
   if (Command) {
     const key = [Command.commandName]
@@ -22,8 +21,17 @@ for (const filename of commandFiles) {
   }
 }
 
-const findCommand = (nameOrAliasse: string) => {
-  return commands.find((v, k) => k.includes(nameOrAliasse))
+const run = (dirname: string) => {
+  let { dirs, files } = listDir(dirname)
+
+  files = files.filter(
+    file => includeFiles.test(file) && !excludeFiles.test(file)
+  )
+
+  files.forEach(filePath => addCommand(filePath))
+  dirs.forEach(dirPath => run(dirPath))
 }
+
+run(global.__dirname)
 
 export { commands, findCommand }
