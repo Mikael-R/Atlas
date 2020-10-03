@@ -22,9 +22,7 @@ client.on('guildCreate', guild => {
 
   guild.owner.send(onServer.added(embed, guild.owner.displayName, guild.name))
 
-  console.log(
-    `> Added: | Name: ${guild.name} | ID ${guild.id} | Members: ${guild.memberCount}`
-  )
+  console.log(`> Added On Guild: ${guild.name}\n> ID: ${guild.id}`)
 })
 
 client.on('guildDelete', guild => {
@@ -32,9 +30,7 @@ client.on('guildDelete', guild => {
 
   guild.owner.send(onServer.removed(embed, guild.owner.displayName, guild.name))
 
-  console.log(
-    `> Removed: | Name: ${guild.name} | ID: ${guild.id} | Members: ${guild.memberCount}`
-  )
+  console.log(`> Removed On Guild: ${guild.name}\n> ID: ${guild.id}`)
 })
 
 client.on('message', async message => {
