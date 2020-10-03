@@ -28,14 +28,22 @@ class Play implements Command {
   static example = 'play Sub Urban - Cradles'
 
   async validator() {
-    const video = await this.videoSearchResult
+    const video = this.videoSearchResult
+    const permissions = this.voiceChannel.permissionsFor(
+      this.commandConfig.message.client.user
+    )
 
     switch (true) {
       case !this.voiceChannel:
         return [':red_circle: You need to be on a voice channel to play a song']
 
-      case !video:
-        return [`:red_circle: No video found, check the search value provided`]
+      case !permissions.has('CONNECT') || !permissions.has('SPEAK'):
+        return [
+          ':red_circle: I need the permissions to join and speak in your voice channel',
+        ]
+
+      case !(await video):
+        return [':red_circle: No video found, check the search value provided']
 
       default:
         return []
