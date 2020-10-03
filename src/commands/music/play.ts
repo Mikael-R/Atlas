@@ -1,4 +1,4 @@
-import { VoiceChannel } from 'discord.js'
+import { PermissionString, VoiceChannel } from 'discord.js'
 import ytSearch from 'yt-search'
 import ytdl from 'ytdl-core'
 
@@ -24,28 +24,16 @@ class Play implements Command {
   static commandName = 'play'
   static description = 'Plays audio from YouTube videos on voice channels'
   static minArguments = 1
+  static permissions: PermissionString[] = ['CONNECT', 'SPEAK']
   static usage = 'play [name, url, id]'
   static example = 'play Sub Urban - Cradles'
 
   async validator() {
-    const {
-      commandConfig: { message },
-      voiceChannel,
-      videoSearchResult,
-    } = this
-
-    const permissions = voiceChannel.permissionsFor(message.client.user)
-
     switch (true) {
-      case !voiceChannel:
+      case !this.voiceChannel:
         return [':red_circle: You need to be on a voice channel to play a song']
 
-      case !permissions.has('CONNECT') || !permissions.has('SPEAK'):
-        return [
-          ':red_circle: I need the permissions to join and speak in your voice channel',
-        ]
-
-      case !(await videoSearchResult):
+      case !(await this.videoSearchResult):
         return [':red_circle: No video found, check the search value provided']
 
       default:
@@ -79,11 +67,11 @@ class Play implements Command {
     await voiceChannel
       .join()
       .then(connection => {
+        embed.setTitle(`:nazar_amulet: ${video.title}`)
+        embed.setURL(video.url)
         embed.setThumbnail(video.image)
-        embed.addField(':nazar_amulet: Playing', `**${video.title}**`)
         embed.addField('On Channel', voiceChannel.name, true)
         embed.addField('Duration', video.duration.timestamp, true)
-        embed.addField('URL', video.url)
 
         playMusic(connection, stream)
       })
