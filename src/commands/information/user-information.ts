@@ -1,4 +1,4 @@
-import { PermissionString, User } from 'discord.js'
+import { User } from 'discord.js'
 
 import {
   Command,
@@ -8,8 +8,10 @@ import {
 
 class UserInformation implements Command {
   private user: User
+
   constructor(private commandConfig: CommandConfig) {
     const { message, messageArgs } = this.commandConfig
+
     this.user =
       message.mentions.users.first() ||
       message.guild.members.resolve(messageArgs[1])?.user ||
@@ -20,37 +22,33 @@ class UserInformation implements Command {
   static aliases = ['userinfo', 'usinfo']
   static description = 'Show information about you or user mentioned'
   static minArguments = 0
-  static permissions?: PermissionString[]
   static usage = 'user-information [mention, id or empty]'
   static example = 'user-information 736626386009194676'
 
   async run() {
     const {
-      embed,
-      message: { guild },
-    } = this.commandConfig
+      commandConfig: {
+        embed,
+        message: { guild },
+      },
+      user,
+    } = this
 
     const infos: UserInformationType = {
-      tag: this.user.tag,
-      avatar: this.user.displayAvatarURL(),
-      status: this.user.presence.status,
-      isBot: this.user.bot,
-      createAccount: this.user.createdAt.toUTCString(),
-      joined: guild.members.resolve(this.user.id).joinedAt.toUTCString(),
-      roles: (() => {
-        const ignoreRoles = ['@everyone']
-        return guild.members
-          .resolve(this.user.id)
-          .roles.cache.filter(
-            role => !role.deleted && !ignoreRoles.includes(role.name)
-          )
-      })(),
-      id: this.user.id,
+      tag: user.tag,
+      avatar: user.displayAvatarURL(),
+      status: user.presence.status,
+      isBot: user.bot,
+      createAccount: user.createdAt.toUTCString(),
+      joined: guild.members.resolve(user.id).joinedAt.toUTCString(),
+      roles: guild.members
+        .resolve(user.id)
+        .roles.cache.filter(role => !role.deleted && role.name !== '@everyone'),
+      id: user.id,
     }
 
     embed
-      .setTitle('')
-      .setDescription(this.user)
+      .setDescription(user)
       .setAuthor(infos.tag, infos.avatar)
       .setThumbnail(infos.avatar)
       .addField('Create Account', infos.createAccount)

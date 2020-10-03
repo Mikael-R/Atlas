@@ -10,9 +10,9 @@ class Play implements Command {
   private videoSearchResult: Promise<ytSearch.VideoSearchResult>
 
   constructor(private commandConfig: CommandConfig) {
-    const { messageArgs } = commandConfig
+    const { message, messageArgs } = commandConfig
 
-    this.voiceChannel = commandConfig.message.member.voice.channel
+    this.voiceChannel = message.member.voice.channel
 
     this.searchValue = messageArgs.slice(1, messageArgs.length).join(' ')
 
@@ -28,13 +28,16 @@ class Play implements Command {
   static example = 'play Sub Urban - Cradles'
 
   async validator() {
-    const video = this.videoSearchResult
-    const permissions = this.voiceChannel.permissionsFor(
-      this.commandConfig.message.client.user
-    )
+    const {
+      commandConfig: { message },
+      voiceChannel,
+      videoSearchResult,
+    } = this
+
+    const permissions = voiceChannel.permissionsFor(message.client.user)
 
     switch (true) {
-      case !this.voiceChannel:
+      case !voiceChannel:
         return [':red_circle: You need to be on a voice channel to play a song']
 
       case !permissions.has('CONNECT') || !permissions.has('SPEAK'):
@@ -42,7 +45,7 @@ class Play implements Command {
           ':red_circle: I need the permissions to join and speak in your voice channel',
         ]
 
-      case !(await video):
+      case !(await videoSearchResult):
         return [':red_circle: No video found, check the search value provided']
 
       default:
@@ -55,6 +58,7 @@ class Play implements Command {
 
     dispatcher.on('error', error => {
       console.log(error)
+      dispatcher.destroy(error)
       connection.channel.leave()
     })
     dispatcher.on('finish', () => connection.channel.leave())
@@ -77,8 +81,9 @@ class Play implements Command {
       .then(connection => {
         embed.setThumbnail(video.image)
         embed.addField(':nazar_amulet: Playing', `**${video.title}**`)
-        embed.addField('On Channel', voiceChannel.name)
-        embed.addField('Duration', video.duration.timestamp)
+        embed.addField('On Channel', voiceChannel.name, true)
+        embed.addField('Duration', video.duration.timestamp, true)
+        embed.addField('URL', video.url)
 
         playMusic(connection, stream)
       })

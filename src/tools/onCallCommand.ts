@@ -1,6 +1,5 @@
 import { flag } from '../preferences.json'
 import { IsCall, InvalidCall, ErrorToRun } from '../types'
-import replaceAll from '../utils/replaceAll'
 
 const isCall: IsCall = (message, messageArgs) => {
   return !(
@@ -46,9 +45,7 @@ const invalidCall: InvalidCall = async ({
 
     case !!needPermissions.bot.length:
       description.push(
-        `:red_circle: I need permissions: \`\`${replaceAll(
-          needPermissions.user.toString(),
-          ',',
+        `:red_circle: I need permissions: \`\`${needPermissions.bot.join(
           ', '
         )}\`\``
       )
@@ -56,9 +53,7 @@ const invalidCall: InvalidCall = async ({
 
     case !!needPermissions.user.length:
       description.push(
-        `:red_circle: You need permissions: \`\`${replaceAll(
-          needPermissions.user.toString(),
-          ',',
+        `:red_circle: You need permissions: \`\`${needPermissions.user.join(
           ', '
         )}\`\``
       )

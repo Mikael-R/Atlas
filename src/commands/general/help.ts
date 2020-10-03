@@ -4,7 +4,6 @@ import { findCommand, commands } from '../../commands'
 import { flag } from '../../preferences.json'
 import { Command, CommandConfig, CommandClass } from '../../types'
 import listItems from '../../utils/listItems'
-import replaceAll from '../../utils/replaceAll'
 
 class Help implements Command {
   constructor(protected commandConfig: CommandConfig) {}
@@ -46,7 +45,7 @@ class Help implements Command {
         Command.aliases &&
           fields.push({
             name: 'Aliases',
-            value: replaceAll(Command.aliases?.toString() || '', ',', ', '),
+            value: Command.aliases?.join(', '),
           })
         fields.push({
           name: 'Description',
@@ -55,11 +54,7 @@ class Help implements Command {
         Command.permissions &&
           fields.push({
             name: 'Permissions',
-            value: replaceAll(
-              replaceAll(Command.permissions.toString(), '_', ' '),
-              ',',
-              ', '
-            ).toLowerCase(),
+            value: Command.permissions.join(', ').split('_').join(' '),
           })
         fields.push({
           name: 'Usage',

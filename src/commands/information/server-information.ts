@@ -26,18 +26,14 @@ class ServerInformation implements Command {
       created: guild.createdAt.toUTCString(),
       region: guild.region,
       members: guild.memberCount,
-      channels: (() => {
-        const existingChannels = guild.channels.cache.filter(
-          channel => channel.deleted === false && channel.type !== 'category'
-        )
-        return existingChannels.size
-      })(),
+      channels: guild.channels.cache.filter(
+        channel => channel.deleted === false && channel.type !== 'category'
+      ).size,
       premiumSubscriptionCount: guild.premiumSubscriptionCount,
       id: guild.id,
     }
 
     embed
-      .setTitle('')
       .setAuthor(infos.name)
       .setThumbnail(infos.icon)
       .addField('Owner', infos.ownerNickname)
