@@ -7,8 +7,10 @@ class Clear implements Command {
   private messagesToDelete: Promise<Collection<string, Message>>
 
   constructor(private commandConfig: CommandConfig) {
-    this.limit = Number(commandConfig.messageArgs[1])
     const { channel } = commandConfig.message
+
+    this.limit = Number(commandConfig.messageArgs[1])
+
     this.messagesToDelete = (channel as TextChannel).messages.fetch({
       limit: this.limit + 1,
     })
@@ -47,7 +49,13 @@ class Clear implements Command {
           `:nazar_amulet: Deleted **${limit}** messages in this channel`
         )
       )
-      .catch(error => description.push(`:red_circle: ${error.message}`))
+      .catch(error => {
+        console.error(error)
+        embed.setDescription(
+          ':red_circle: An error occurred while clear messages'
+        )
+        embed.setColor('#E81010')
+      })
 
     embed.setDescription(description.join('\n\n'))
 

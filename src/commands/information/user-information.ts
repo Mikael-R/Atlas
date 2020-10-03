@@ -1,65 +1,46 @@
-import { User } from 'discord.js'
-
-import {
-  Command,
-  UserInformation as UserInformationType,
-  CommandConfig,
-} from '../../types'
+import { Command, CommandConfig } from '../../types'
 
 class UserInformation implements Command {
-  private user: User
-
-  constructor(private commandConfig: CommandConfig) {
-    const { message, messageArgs } = this.commandConfig
-
-    this.user =
-      message.mentions.users.first() ||
-      message.guild.members.resolve(messageArgs[1])?.user ||
-      message.author
-  }
+  constructor(private commandConfig: CommandConfig) {}
 
   static commandName = 'user-information'
   static aliases = ['userinfo', 'usinfo']
   static description = 'Show information about you or user mentioned'
   static minArguments = 0
-  static usage = 'user-information [mention, id or empty]'
+  static usage = 'user-information [mention, id, empty]'
   static example = 'user-information 736626386009194676'
 
   async run() {
-    const {
-      commandConfig: {
-        embed,
-        message: { guild },
-      },
-      user,
-    } = this
+    const { embed, message, messageArgs } = this.commandConfig
 
-    const infos: UserInformationType = {
+    const user =
+      message.mentions.users.first() ||
+      message.guild.members.resolve(messageArgs[1])?.user ||
+      message.author
+
+    const infos = {
+      username: user.username,
       tag: user.tag,
       avatar: user.displayAvatarURL(),
       status: user.presence.status,
-      isBot: user.bot,
       createAccount: user.createdAt.toUTCString(),
-      joined: guild.members.resolve(user.id).joinedAt.toUTCString(),
-      roles: guild.members
+      joined: message.guild.members.resolve(user.id).joinedAt.toUTCString(),
+      roles: message.guild.members
         .resolve(user.id)
-        .roles.cache.filter(role => !role.deleted && role.name !== '@everyone'),
+        .roles.cache.filter(role => !role.deleted && role.name !== '@everyone')
+        .map(role => `<@&${role.id}>`),
       id: user.id,
     }
 
     embed
-      .setDescription(user)
-      .setAuthor(infos.tag, infos.avatar)
       .setThumbnail(infos.avatar)
+      .addField('Username', user.username, true)
+      .addField('Tag', user.tag, true)
+      .addField('Status', infos.status, true)
       .addField('Create Account', infos.createAccount)
       .addField('Joined', infos.joined)
-      .addField('Status', infos.status, true)
-      .addField('Bot', infos.isBot ? 'Yes' : 'No', true)
-    infos.roles.size > 0 &&
-      embed.addField(
-        `Roles [${infos.roles.size}]`,
-        infos.roles.map(role => `<@&${role.id}>`).join(' ')
-      )
+    infos.roles.length > 0 &&
+      embed.addField(`Roles [${infos.roles.length}]`, infos.roles.join(' '))
     embed.addField('ID', infos.id)
 
     return embed

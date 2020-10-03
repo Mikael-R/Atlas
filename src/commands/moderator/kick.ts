@@ -4,8 +4,10 @@ import { Command, CommandConfig } from '../../types'
 
 class Kick implements Command {
   private userGuild: GuildMember
+
   constructor(private commandConfig: CommandConfig) {
     const { guild, mentions } = commandConfig.message
+
     this.userGuild =
       guild.member(mentions.users.first()) ||
       guild.members.resolve(commandConfig.messageArgs[1])

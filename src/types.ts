@@ -2,13 +2,11 @@ import {
   MessageEmbed,
   PermissionString,
   Message,
-  Collection,
-  Role,
   VoiceConnection,
   StreamOptions,
   VoiceBroadcast,
 } from 'discord.js'
-import internal from 'stream'
+import { Readable } from 'stream'
 
 export interface CommandClass {
   new (CommandConfig: CommandConfig): Command
@@ -59,29 +57,6 @@ export interface ErrorToRun {
   ({ embed, error }: { embed: MessageEmbed; error: Error }): MessageEmbed
 }
 
-export interface UserInformation {
-  tag: string
-  avatar: string
-  status: string
-  isBot: boolean
-  createAccount: string
-  joined: string
-  roles: Collection<string, Role>
-  id: string
-}
-
-export interface ServerInformation {
-  name: string
-  icon: string
-  members: number
-  ownerNickname: string
-  created: string
-  region: string
-  channels: number
-  premiumSubscriptionCount: number
-  id: string
-}
-
 export interface OnServer {
   (embed: MessageEmbed, ownerName: string, serverName: string): MessageEmbed
 }
@@ -89,7 +64,7 @@ export interface OnServer {
 export interface PlayMusic {
   (
     connection: VoiceConnection,
-    stream: string | internal.Readable | VoiceBroadcast,
+    stream: string | Readable | VoiceBroadcast,
     streamOptions?: StreamOptions
   ): void
 }

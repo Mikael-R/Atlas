@@ -1,8 +1,4 @@
-import {
-  Command,
-  ServerInformation as ServerInformationType,
-  CommandConfig,
-} from '../../types'
+import { Command, CommandConfig } from '../../types'
 
 class ServerInformation implements Command {
   constructor(private commandConfig: CommandConfig) {}
@@ -15,11 +11,11 @@ class ServerInformation implements Command {
 
   async run() {
     const {
-      embed,
       message: { guild },
+      embed,
     } = this.commandConfig
 
-    const infos: ServerInformationType = {
+    const infos = {
       name: guild.name,
       icon: guild.iconURL(),
       ownerNickname: guild.owner.user.tag,
@@ -34,7 +30,7 @@ class ServerInformation implements Command {
     }
 
     embed
-      .setAuthor(infos.name)
+      .setDescription(infos.name)
       .setThumbnail(infos.icon)
       .addField('Owner', infos.ownerNickname)
       .addField('Created', infos.created)

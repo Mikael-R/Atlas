@@ -1,4 +1,4 @@
-import { PermissionString, EmbedFieldData } from 'discord.js'
+import { EmbedFieldData } from 'discord.js'
 
 import { findCommand, commands } from '../../commands'
 import { flag } from '../../preferences.json'
@@ -12,7 +12,6 @@ class Help implements Command {
   static aliases = ['h']
   static description = 'Show commands or more information about  command'
   static minArguments = 0
-  static permissions: PermissionString[]
   static usage = 'help [command, page number]'
   static example = 'help 2'
 

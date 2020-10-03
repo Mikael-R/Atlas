@@ -40,14 +40,18 @@ client.on('message', async message => {
 
   messageArgs[0] = messageArgs[0].replace(flag, '')
 
-  const embed = new MessageEmbed({
-    title: message.guild.name,
-    color: '#1213BD',
-  })
-
   const Command = findCommand(messageArgs[0])
 
   if (!Command) return null
+
+  const embed = new MessageEmbed({
+    color: '#1213BD',
+    author: { name: message.guild.name, iconURL: message.guild.iconURL() },
+    footer: {
+      text: `Command requested by: ${message.author.tag}`,
+      iconURL: message.author.avatarURL(),
+    },
+  })
 
   const invalidCallCommand = await onCallCommand.invalidCall({
     embed,
@@ -78,14 +82,7 @@ client.on('message', async message => {
       messageArgs,
     }))
 
-  if (returnEmbed) {
-    returnEmbed.setFooter(
-      `Command requested by: ${message.author.tag}`,
-      message.author.avatarURL()
-    )
-
-    await message.reply(returnEmbed)
-  }
+  returnEmbed && (await message.reply(returnEmbed))
 })
 
 client.login(process.env.TOKEN)
