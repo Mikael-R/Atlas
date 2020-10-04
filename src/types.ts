@@ -21,7 +21,11 @@ export interface CommandClass {
 
 export interface Command {
   validator?: () => Promise<string[] | []> | string[] | []
-  run: () => void | MessageEmbed | Promise<MessageEmbed>
+  run: () =>
+    | Promise<MessageEmbed | MessageEmbed | void>
+    | MessageEmbed
+    | MessageEmbed
+    | void
 }
 
 export interface CommandConfig {

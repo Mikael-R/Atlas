@@ -19,27 +19,21 @@ const invalidCall: InvalidCall = async ({
 }) => {
   const description: string[] = []
 
+  var passed = false
+
+  const commandPermissions = Command.permissions || []
   const needPermissions = {
-    user:
-      Command?.permissions?.filter(perm => !permissions.user.includes(perm)) ||
-      [],
-    bot:
-      Command?.permissions?.filter(perm => !permissions.bot.includes(perm)) ||
-      [],
+    user: commandPermissions.filter(perm => !permissions.user.includes(perm)),
+    bot: commandPermissions.filter(perm => !permissions.bot.includes(perm)),
   }
 
   const commandInitialized = new Command({ message, embed, messageArgs })
-
   const validation = commandInitialized.validator
-    ? await commandInitialized?.validator()
+    ? await commandInitialized.validator()
     : []
 
   switch (true) {
-    case !Command:
-      description.push(`:red_circle: Not found Command: **${messageArgs[0]}**`)
-      break
-
-    case messageArgs.length - 1 < Command.minArguments:
+    case messageArgs.length < Command.minArguments:
       description.push(`:red_circle: Need arguments: \`\`${Command.usage}\`\``)
       break
 
@@ -67,14 +61,15 @@ const invalidCall: InvalidCall = async ({
     case !!validation.length:
       validation.forEach(desc => description.push(desc))
       break
+
+    default:
+      passed = true
   }
 
-  if (!description.length) return null
+  if (passed) return null
 
   description.push(
-    `:red_circle: Use **${flag}help ${
-      Command?.commandName || ''
-    }** for more information's`
+    `:red_circle: Use **${flag}help ${messageArgs[1]}** for more information's`
   )
 
   embed.setColor('#E81010')
