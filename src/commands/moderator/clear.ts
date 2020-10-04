@@ -1,19 +1,11 @@
-import { Collection, Message, PermissionString, TextChannel } from 'discord.js'
+import { PermissionString, TextChannel } from 'discord.js'
 
 import { Command, CommandConfig } from '../../types'
 
 class Clear implements Command {
   private limit: number
-  private messagesToDelete: Promise<Collection<string, Message>>
-
   constructor(private commandConfig: CommandConfig) {
-    const { channel } = commandConfig.message
-
-    this.limit = Number(commandConfig.messageArgs[1])
-
-    this.messagesToDelete = (channel as TextChannel).messages.fetch({
-      limit: this.limit + 1,
-    })
+    this.limit = Number(commandConfig.messageArgs[1]) || -1
   }
 
   static commandName = 'clear'
@@ -25,7 +17,7 @@ class Clear implements Command {
   static example = 'clear 7'
 
   validator() {
-    return this.limit <= 0 || this.limit > 1024 || isNaN(this.limit)
+    return this.limit <= 0 || this.limit > 1024
       ? [
           ':red_circle: You not informed a valid value',
           ':red_circle: Use low numbers greater than zero',
@@ -37,13 +29,12 @@ class Clear implements Command {
     const {
       commandConfig: { embed, message },
       limit,
-      messagesToDelete,
     } = this
 
     const description: string[] = []
 
     await (message.channel as TextChannel)
-      .bulkDelete(await messagesToDelete)
+      .bulkDelete(limit + 1)
       .then(() =>
         description.push(
           `:nazar_amulet: Deleted **${limit}** messages in this channel`
