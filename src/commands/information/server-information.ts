@@ -4,7 +4,7 @@ class ServerInformation implements Command {
   constructor(private commandConfig: CommandConfig) {}
 
   static commandName = 'server-information'
-  static aliases = ['serverinfo', 'svinfo']
+  static aliases = ['svinfo', 'serverinfo']
   static description = 'Show information about this server'
   static minArguments = 0
   static usage = 'server-information'
@@ -30,7 +30,6 @@ class ServerInformation implements Command {
     }
 
     embed
-      .setDescription(infos.name)
       .setThumbnail(infos.icon)
       .addField('Owner', infos.ownerNickname)
       .addField('Created', infos.created)

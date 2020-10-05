@@ -4,7 +4,7 @@ class Ping implements Command {
   constructor(private commandConfig: CommandConfig) {}
 
   static commandName = 'ping'
-  static aliases = ['p', 'pong', 'latency']
+  static aliases = ['pg', 'pong', 'latency']
   static description = 'Show bot ping in milliseconds on send message'
   static minArguments = 0
   static usage = 'ping'

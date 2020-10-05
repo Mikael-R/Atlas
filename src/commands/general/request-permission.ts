@@ -26,18 +26,22 @@ interface CustomCollectorFilter {
 }
 
 class RequestPermission implements Command {
+  private commandConfig: CommandConfig
   private Command?: CommandClass
   private requestRun: string
 
-  constructor(private commandConfig: CommandConfig) {
-    const { messageArgs } = commandConfig
+  constructor(commandConfig: CommandConfig) {
+    this.commandConfig = {
+      ...commandConfig,
+      messageArgs: commandConfig.messageArgs.slice(1),
+    }
 
-    this.Command = findCommand(messageArgs[1])
+    this.Command = findCommand(this.commandConfig.messageArgs[0])
     this.requestRun = this.commandConfig.messageArgs.join(' ')
   }
 
   static commandName = 'request-permission'
-  static aliases = ['req-perm', 'reqp']
+  static aliases = ['rp', 'reqp', 'req-perm']
   static description = 'Request to run command thats need permissions'
   static minArguments = 1
   static usage = 'request-permission [command]'
@@ -55,7 +59,7 @@ class RequestPermission implements Command {
     } = this
 
     if (!Command)
-      return [`:red_circle: Not found the command **${messageArgs[1]}**`]
+      return [`:red_circle: Not found the command **${messageArgs[0]}**`]
 
     const userNeedPermissions = needPermissions({
       member: message.guild.members.resolve(message.author.id),
@@ -67,15 +71,15 @@ class RequestPermission implements Command {
         embed,
         message,
         Command,
-        messageArgs: messageArgs.slice(1, messageArgs.length),
+        messageArgs,
         permissions: {
           user: message.guild.me.permissions.toArray(),
           bot: message.guild.me.permissions.toArray(),
         },
       })
-    )?.description?.split('\n\n')
-
-    invalidCallCommandDescription?.pop()
+    )?.description
+      ?.split('\n\n')
+      ?.slice(0, -1)
 
     switch (true) {
       case !Command.permissions?.length:
@@ -101,6 +105,7 @@ class RequestPermission implements Command {
       commandConfig: { messageArgs, embed, message },
       Command,
       needPermissions,
+      requestRun,
     } = this
 
     const description: string[] = []
@@ -128,10 +133,10 @@ class RequestPermission implements Command {
     }
 
     embed.setDescription(
-      `:nazar_amulet: <@${message.author.id}> request run: \`\`${this.requestRun}\`\``
+      `:nazar_amulet: <@${message.author.id}> request run: \`\`${requestRun}\`\``
     )
 
-    const confirmMessage = await message.channel.send(embed)
+    const confirmMessage = await message.reply(embed)
 
     const commandInitialized = new Command({
       embed: returnEmbed,
@@ -158,7 +163,7 @@ class RequestPermission implements Command {
           const commandEmbed = await commandInitialized.run()
 
           description.push(
-            `:white_check_mark: <@${userThatsAccepted.id}> accepted <@${message.author.id}> run: \`\`${this.requestRun}\`\``
+            `:white_check_mark: <@${userThatsAccepted.id}> accepted <@${message.author.id}> run: \`\`${requestRun}\`\``
           )
 
           commandEmbed &&
@@ -167,7 +172,7 @@ class RequestPermission implements Command {
               .forEach(desc => description.push(desc))
         } else {
           description.push(
-            `:x: <@${userThatsAccepted.id}> recused <@${message.author.id}> run: \`\`${this.requestRun}\`\``
+            `:x: <@${userThatsAccepted.id}> recused <@${message.author.id}> run: \`\`${requestRun}\`\``
           )
           returnEmbed.setColor('#E81010')
         }

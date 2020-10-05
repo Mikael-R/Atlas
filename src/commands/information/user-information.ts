@@ -4,7 +4,7 @@ class UserInformation implements Command {
   constructor(private commandConfig: CommandConfig) {}
 
   static commandName = 'user-information'
-  static aliases = ['userinfo', 'usinfo']
+  static aliases = ['usinfo', 'userinfo']
   static description = 'Show information about you or user mentioned'
   static minArguments = 0
   static usage = 'user-information [mention, id, empty]'

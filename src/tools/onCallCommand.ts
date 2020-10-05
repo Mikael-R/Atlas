@@ -19,8 +19,6 @@ const invalidCall: InvalidCall = async ({
 }) => {
   const description: string[] = []
 
-  var passed = false
-
   const commandPermissions = Command.permissions || []
   const needPermissions = {
     user: commandPermissions.filter(perm => !permissions.user.includes(perm)),
@@ -63,13 +61,11 @@ const invalidCall: InvalidCall = async ({
       break
 
     default:
-      passed = true
+      return null
   }
 
-  if (passed) return null
-
   description.push(
-    `:red_circle: Use **${flag}help ${messageArgs[1]}** for more information's`
+    `:red_circle: Use **${flag}help ${Command.commandName}** for more information's`
   )
 
   embed.setColor('#E81010')

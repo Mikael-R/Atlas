@@ -6,11 +6,14 @@ class Kick implements Command {
   private userGuild: GuildMember
 
   constructor(private commandConfig: CommandConfig) {
-    const { guild, mentions } = commandConfig.message
+    const {
+      message: { guild, mentions },
+      messageArgs,
+    } = commandConfig
 
     this.userGuild =
       guild.member(mentions.users.first()) ||
-      guild.members.resolve(commandConfig.messageArgs[1])
+      guild.members.resolve(messageArgs[1])
   }
 
   static commandName = 'kick'
@@ -28,12 +31,18 @@ class Kick implements Command {
   }
 
   async run() {
-    const { embed, message } = this.commandConfig
+    const {
+      commandConfig: {
+        embed,
+        message: { author },
+      },
+      userGuild,
+    } = this
 
-    await this.userGuild.kick()
+    await userGuild.kick()
 
     embed.setDescription(
-      `:nazar_amulet: <@${message.author.id}> has kicked <@${this.userGuild.id}>`
+      `:nazar_amulet: <@${author.id}> has kicked <@${userGuild.id}>`
     )
 
     return embed

@@ -9,10 +9,10 @@ class Help implements Command {
   constructor(protected commandConfig: CommandConfig) {}
 
   static commandName = 'help'
-  static aliases = ['h']
+  static aliases = ['h', 'hp']
   static description = 'Show commands or more information about  command'
   static minArguments = 0
-  static usage = 'help [command, page number]'
+  static usage = 'help [command, page]'
   static example = 'help 2'
 
   async run() {
@@ -40,7 +40,10 @@ class Help implements Command {
         break
 
       case !!Command:
-        fields.push({ name: 'Name', value: `**${Command.commandName}**` })
+        fields.push({
+          name: 'Command Name',
+          value: `**${Command.commandName}**`,
+        })
         Command.aliases &&
           fields.push({
             name: 'Aliases',
@@ -53,7 +56,11 @@ class Help implements Command {
         Command.permissions &&
           fields.push({
             name: 'Permissions',
-            value: Command.permissions.join(', ').split('_').join(' '),
+            value: Command.permissions
+              .join(', ')
+              .split('_')
+              .join(' ')
+              .toLowerCase(),
           })
         fields.push({
           name: 'Usage',
