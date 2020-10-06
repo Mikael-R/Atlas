@@ -27,7 +27,7 @@ class Help implements Command {
     const Command = findCommand(messageArgs[1])
 
     const commandsToPage: CommandClass[] = listItems(
-      commands.array(),
+      Array.from(commands.values()),
       pageIndex || 1,
       maxCommandsInPage
     )

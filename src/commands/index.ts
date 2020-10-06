@@ -1,15 +1,15 @@
-import { Collection } from 'discord.js'
-
 import { CommandClass } from '../types'
 import listDirSync from '../utils/listDirSync'
 
-const commands: Collection<string[], CommandClass> = new Collection()
+const commands: Map<string[], CommandClass> = new Map()
 
 const excludeFiles = /index\.[jt]s$/
 const includeFiles = /.+\.[jt]s$/
 
 const findCommand = (nameOrAliasse: string) =>
-  commands.find((value, key) => key.includes(nameOrAliasse))
+  commands.get(
+    Array.from(commands.keys()).find(key => key.includes(nameOrAliasse))
+  )
 
 const addCommand = (filePath: string) => {
   const Command: CommandClass = require(filePath)?.default
