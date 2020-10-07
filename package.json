@@ -6,12 +6,9 @@
   "private": true,
   "scripts": {
     "format": "eslint src --ext ts",
-    "remove-old-build": "rimraf build",
-    "compile-build": "sucrase src -d build --transforms typescript,imports",
-    "copy-assets": "cpy '**/*.json' '../build/' --cwd=src --parents",
-    "build": "npm run remove-old-build && npm run compile-build && npm run copy-assets",
-    "prod": "npm run build && node build/index.js",
-    "dev": "nodemon --watch src --exec sucrase-node src/index.ts"
+    "build": "babel src --extensions \".ts\" --out-dir build --copy-files --no-comments",
+    "prod": "npm run build && node .",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -30,13 +27,16 @@
   "author": "Mikael Rolim de Aquino <mikarg9@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "cpy-cli": "^3.1.1",
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/node": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "babel-plugin-module-resolver": "^4.0.0",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^4.2.7",
     "opusscript": "^0.0.7",
-    "rimraf": "^3.0.2",
-    "sucrase": "^3.15.0",
     "yt-search": "^2.3.1",
     "ytdl-core": "^3.3.0"
   },
@@ -61,10 +61,8 @@
     "git-cz": "^4.7.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.13",
-    "nodemon": "^2.0.4",
     "prettier": "^2.1.1",
     "ts-node-dev": "^1.0.0-pre.50",
-    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.9.6"
   }
 }
