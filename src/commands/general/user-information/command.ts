@@ -1,4 +1,4 @@
-import { Command, CommandConfig } from '../../types'
+import { Command, CommandConfig } from '@src/types'
 
 class UserInformation implements Command {
   constructor(private commandConfig: CommandConfig) {}

@@ -1,12 +1,4 @@
-import {
-  MessageEmbed,
-  PermissionString,
-  Message,
-  VoiceConnection,
-  StreamOptions,
-  VoiceBroadcast,
-} from 'discord.js'
-import { Readable } from 'stream'
+import { MessageEmbed, PermissionString, Message } from 'discord.js'
 
 export interface CommandClass {
   new (CommandConfig: CommandConfig): Command
@@ -63,12 +55,4 @@ export interface ErrorToRun {
 
 export interface OnServer {
   (embed: MessageEmbed, ownerName: string, serverName: string): MessageEmbed
-}
-
-export interface PlayMusic {
-  (
-    connection: VoiceConnection,
-    stream: string | Readable | VoiceBroadcast,
-    streamOptions?: StreamOptions
-  ): void
 }

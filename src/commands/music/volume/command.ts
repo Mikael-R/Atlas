@@ -1,6 +1,5 @@
+import { Command, CommandConfig } from '@src/types'
 import { VoiceState } from 'discord.js'
-
-import { Command, CommandConfig } from '../../types'
 
 class Volume implements Command {
   private memberVoiceState: VoiceState
@@ -28,7 +27,7 @@ class Volume implements Command {
 
   validator() {
     switch (true) {
-      case !this.memberVoiceState.channel:
+      case !this.memberVoiceState.channelID:
         return [
           ':red_circle: You need to be on a voice channel to change volume',
         ]

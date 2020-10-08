@@ -1,6 +1,5 @@
+import { Command, CommandConfig } from '@src/types'
 import { PermissionString, GuildMember } from 'discord.js'
-
-import { Command, CommandConfig } from '../../types'
 
 class Kick implements Command {
   private userGuild: GuildMember

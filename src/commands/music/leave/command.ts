@@ -1,6 +1,5 @@
+import { Command, CommandConfig } from '@src/types'
 import { VoiceState } from 'discord.js'
-
-import { Command, CommandConfig } from '../../types'
 
 class Leave implements Command {
   private clientVoiceState?: VoiceState

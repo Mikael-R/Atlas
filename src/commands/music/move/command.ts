@@ -1,8 +1,7 @@
+import { Command, CommandConfig } from '@src/types'
 import { PermissionString, VoiceConnection, VoiceState } from 'discord.js'
 
-import { Command, CommandConfig } from '../../types'
-
-class Join implements Command {
+class Move implements Command {
   private memberVoiceState: VoiceState
   private clientVoiceState?: VoiceState
 
@@ -16,21 +15,24 @@ class Join implements Command {
     )?.voice
   }
 
-  static commandName = 'join'
-  static aliases = ['jn', 'connect']
-  static description = 'Connect in voice channel'
+  static commandName = 'move'
+  static aliases = ['mv']
+  static description = 'Move to voice channel'
+  static permissions: PermissionString[] = ['CONNECT', 'MOVE_MEMBERS']
   static minArguments = 0
-  static permissions: PermissionString[] = ['CONNECT']
-  static usage = 'join'
+  static usage = 'move'
 
   validator() {
     switch (true) {
-      case !this.memberVoiceState.channel:
-        return [':red_circle: You need to be on a voice channel to connect me']
+      case !this.memberVoiceState.channelID:
+        return [':red_circle: You need to be on a voice channel to move me']
 
-      case !!this.clientVoiceState?.connection:
+      case !this.clientVoiceState.channelID:
+        return [":red_circle: I'm not connected in any channel"]
+
+      case this.memberVoiceState.channelID === this.clientVoiceState.channelID:
         return [
-          `:red_circle: Im already connected in ${this.memberVoiceState.channel.name}`,
+          `:red_circle: I'm already connected in \`\`${this.memberVoiceState.channel.name}\`\` channel`,
         ]
 
       default:
@@ -46,20 +48,23 @@ class Join implements Command {
     }, 30000)
   }
 
-  async run() {
+  run() {
     const {
       commandConfig: { embed },
-      disconnectIfNotStreaming,
       memberVoiceState,
+      clientVoiceState,
+      disconnectIfNotStreaming,
     } = this
 
-    await memberVoiceState.channel
+    clientVoiceState?.connection?.dispatcher?.destroy()
+
+    memberVoiceState.channel
       .join()
       .then(connection => {
         disconnectIfNotStreaming(connection)
 
         embed.setDescription(
-          `:nazar_amulet: Connected in the \`\`${connection.channel.name}\`\` channel`
+          `:nazar_amulet: Moved from \`\`${clientVoiceState.channel.name}\`\` to \`\`${connection.channel.name}\`\` channel`
         )
       })
       .catch(error => {
@@ -74,4 +79,4 @@ class Join implements Command {
   }
 }
 
-export default Join
+export default Move

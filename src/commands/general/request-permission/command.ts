@@ -1,3 +1,6 @@
+import { findCommand } from '@src/commands'
+import onCallCommand from '@src/tools/onCallCommand'
+import { Command, CommandConfig, CommandClass } from '@src/types'
 import {
   User,
   MessageReaction,
@@ -5,11 +8,6 @@ import {
   PermissionString,
   MessageEmbed,
 } from 'discord.js'
-
-import { findCommand } from '..'
-
-import onCallCommand from '../../tools/onCallCommand'
-import { Command, CommandConfig, CommandClass } from '../../types'
 
 interface NeedPermissions {
   ({

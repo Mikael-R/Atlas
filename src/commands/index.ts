@@ -1,10 +1,9 @@
-import { CommandClass } from '../types'
-import listDirSync from '../utils/listDirSync'
+import { CommandClass } from '@src/types'
+import listDirSync from '@src/utils/listDirSync'
 
 const commands: Map<string[], CommandClass> = new Map()
 
-const excludeFiles = /index\.[jt]s$/
-const includeFiles = /.+\.[jt]s$/
+const includeFiles = /.+\/(command)\.[jt]s$/
 
 const findCommand = (nameOrAliasse: string) =>
   commands.get(
@@ -23,9 +22,7 @@ const addCommand = (filePath: string) => {
 const run = (dirname: string) => {
   let { dirs, files } = listDirSync(dirname)
 
-  files = files.filter(
-    file => includeFiles.test(file) && !excludeFiles.test(file)
-  )
+  files = files.filter(file => includeFiles.test(file))
 
   dirs.forEach(dirPath => run(dirPath))
   files.forEach(filePath => addCommand(filePath))
