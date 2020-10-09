@@ -37,13 +37,15 @@
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^4.2.7",
     "opusscript": "^0.0.7",
+    "redux": "^4.0.5",
     "yt-search": "^2.3.1",
-    "ytdl-core": "^3.3.0"
+    "ytdl-core-discord": "^1.2.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.0.1",
     "@commitlint/config-conventional": "^9.1.2",
     "@types/node": "^14.0.14",
+    "@types/redux": "^3.6.0",
     "@types/yt-search": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^3.6.0",
     "@typescript-eslint/parser": "^3.6.0",
