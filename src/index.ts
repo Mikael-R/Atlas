@@ -51,6 +51,7 @@ client.on('message', async message => {
       text: `Command requested by: ${message.author.tag}`,
       iconURL: message.author.avatarURL(),
     },
+    timestamp: Date.now(),
   })
 
   const invalidCallCommand = await onCallCommand.invalidCall({

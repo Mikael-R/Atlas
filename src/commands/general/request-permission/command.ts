@@ -6,7 +6,6 @@ import {
   MessageReaction,
   GuildMember,
   PermissionString,
-  MessageEmbed,
 } from 'discord.js'
 
 interface NeedPermissions {
@@ -108,14 +107,7 @@ class RequestPermission implements Command {
 
     const description: string[] = []
 
-    const returnEmbed = new MessageEmbed({
-      color: '#1213BD',
-      author: { name: message.guild.name, iconURL: message.guild.iconURL() },
-      footer: {
-        text: `Command requested by: ${message.author.tag}`,
-        iconURL: message.author.avatarURL(),
-      },
-    })
+    const returnEmbed = embed
 
     const filter: CustomCollectorFilter = (reaction, user) => {
       const havePermission = !needPermissions({
