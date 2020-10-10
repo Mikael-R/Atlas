@@ -1,11 +1,11 @@
 import { Reducer } from 'redux'
 
-type TSongsQueueActionTypes = 'SET' | 'REMOVE-VALUE' | 'DELETE'
-type TSongsQueueStateKey = string
-type TSongsQueueStateValue = {
+export type TSongsQueueActionTypes = 'SET' | 'REMOVE-VALUE' | 'DELETE'
+export type TSongsQueueStateKey = string
+export type TSongsQueueStateValue = {
   url: string
   title: string
-  duration: string
+  duration: number
   userTagThatsRequest: string
 }
 

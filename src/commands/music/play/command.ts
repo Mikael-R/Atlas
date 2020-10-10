@@ -1,7 +1,7 @@
 import { Command, CommandConfig } from '@src/types'
 import { PermissionString, StreamOptions, VoiceState } from 'discord.js'
 import { search, VideoSearchResult } from 'yt-search'
-import ytdl from 'ytdl-core-discord'
+import newDownload from 'ytdl-core-discord'
 
 import songsActions from '../actions'
 import songsStore from '../store'
@@ -78,7 +78,9 @@ class Play implements Command {
 
     const song = songsStore.getState().songsQueue.get(connection.channel.id)[0]
 
-    const stream = await ytdl(song.url, { filter: 'audioonly' })
+    const stream = await newDownload(song.url, {
+      filter: 'audioonly',
+    })
 
     const dispatcher = connection.play(stream, streamOptions)
 
@@ -153,7 +155,7 @@ class Play implements Command {
         songInformation: {
           url: song.url,
           title: song.title,
-          duration: song.duration.timestamp,
+          duration: song.duration.seconds,
           userTagThatsRequest: member.user.tag,
         },
       })
@@ -167,7 +169,7 @@ class Play implements Command {
     const queueLength = songsStore.getState().songsQueue.get(channel.id).length
 
     if (queueLength > 1) {
-      embed.addField('Position in queue', queueLength, true)
+      embed.addField('Position in queue', queueLength - 1, true)
     } else {
       if (!dispatcher?.paused) startMusics()
     }

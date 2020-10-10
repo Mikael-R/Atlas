@@ -1,14 +1,11 @@
+import { TSongsQueueStateValue } from './reducers'
+
 const setSongToQueue = ({
   channelID,
   songInformation,
 }: {
   channelID: string
-  songInformation: {
-    url: string
-    title: string
-    duration: string
-    userTagThatsRequest: string
-  }
+  songInformation: TSongsQueueStateValue
 }) => ({
   type: 'SET' as 'SET',
   value: {

@@ -1,9 +1,8 @@
 import { findCommand, commands } from '@src/commands'
 import { flag } from '@src/preferences.json'
 import { Command, CommandConfig, CommandClass } from '@src/types'
+import listItems from '@src/utils/listItems'
 import { EmbedFieldData } from 'discord.js'
-
-import listItems from './listItems'
 
 class Help implements Command {
   constructor(protected commandConfig: CommandConfig) {}
