@@ -60,10 +60,10 @@ client.on('message', async message => {
     Command,
     messageArgs,
     permissions: {
+      client: message.guild.me.permissions.toArray(),
       user: message.guild.members
         .resolve(message.author.id)
         .permissions.toArray(),
-      bot: message.guild.me.permissions.toArray(),
     },
   })
 

@@ -39,7 +39,10 @@ class Play implements Command {
   static aliases = ['p', 'pl']
   static description = 'Plays audio from YouTube videos on voice channels'
   static minArguments = 1
-  static permissions: PermissionString[] = ['SPEAK']
+  static permissions = {
+    client: ['SPEAK'] as PermissionString[],
+  }
+
   static usage = 'play [name, url, id]'
   static example = 'play Sub Urban - Cradles'
 

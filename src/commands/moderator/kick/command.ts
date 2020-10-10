@@ -19,7 +19,11 @@ class Kick implements Command {
   static aliases = ['k', 'kck']
   static description = 'Kick user from server'
   static minArguments = 1
-  static permissions: PermissionString[] = ['KICK_MEMBERS']
+  static permissions = {
+    user: ['KICK_MEMBERS'] as PermissionString[],
+    client: ['KICK_MEMBERS'] as PermissionString[],
+  }
+
   static usage = 'kick [mention, id]'
   static example = 'kick 736626386009194676'
 

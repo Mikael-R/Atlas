@@ -10,7 +10,11 @@ class Clear implements Command {
   static commandName = 'clear'
   static aliases = ['c', 'cls']
   static description = 'Delete previous messages'
-  static permissions: PermissionString[] = ['MANAGE_MESSAGES']
+  static permissions = {
+    client: ['MANAGE_MESSAGES'] as PermissionString[],
+    user: ['MANAGE_MESSAGES'] as PermissionString[],
+  }
+
   static minArguments = 1
   static usage = 'clear [limit]'
   static example = 'clear 7'

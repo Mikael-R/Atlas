@@ -5,7 +5,10 @@ export interface CommandClass {
   commandName: string
   aliases: string[]
   description: string
-  permissions?: PermissionString[]
+  permissions?: {
+    client?: PermissionString[]
+    user?: PermissionString[]
+  }
   minArguments: number
   usage: string
   example?: string
@@ -43,8 +46,8 @@ export interface InvalidCall {
     Command: CommandClass
     messageArgs: string[]
     permissions: {
+      client: PermissionString[]
       user: PermissionString[]
-      bot: PermissionString[]
     }
   }): Promise<MessageEmbed> | MessageEmbed
 }

@@ -55,11 +55,23 @@ class Help implements Command {
         Command.permissions &&
           fields.push({
             name: 'Permissions',
-            value: Command.permissions
-              .join(', ')
-              .split('_')
-              .join(' ')
-              .toLowerCase(),
+            value: `${
+              Command.permissions?.client
+                ? `Client: ${Command.permissions.client
+                    .join(', ')
+                    .split('_')
+                    .join(' ')
+                    .toLowerCase()}\n\n`
+                : ''
+            }${
+              Command.permissions?.user
+                ? `User: ${Command.permissions.user
+                    .join(', ')
+                    .split('_')
+                    .join(' ')
+                    .toLowerCase()}`
+                : ''
+            }`,
           })
         fields.push({
           name: 'Usage',

@@ -60,7 +60,7 @@ class RequestPermission implements Command {
 
     const userNeedPermissions = needPermissions({
       member: message.guild.members.resolve(message.author.id),
-      permissions: Command.permissions || [],
+      permissions: Command.permissions?.user || [],
     })
 
     const invalidCallCommandDescription = (
@@ -70,8 +70,8 @@ class RequestPermission implements Command {
         Command,
         messageArgs,
         permissions: {
+          client: message.guild.me.permissions.toArray(),
           user: message.guild.me.permissions.toArray(),
-          bot: message.guild.me.permissions.toArray(),
         },
       })
     )?.description
@@ -79,9 +79,9 @@ class RequestPermission implements Command {
       ?.slice(0, -1)
 
     switch (true) {
-      case !Command.permissions?.length:
+      case !Command.permissions?.user:
         return [
-          `:red_circle: Not is required permission to run: \`\`${requestRun}\`\``,
+          `:red_circle: Users not need permission to run: \`\`${requestRun}\`\``,
         ]
 
       case !userNeedPermissions.length:
@@ -112,7 +112,7 @@ class RequestPermission implements Command {
     const filter: CustomCollectorFilter = (reaction, user) => {
       const havePermission = !needPermissions({
         member: reaction.message.guild.members.resolve(user.id),
-        permissions: Command?.permissions || [],
+        permissions: Command?.permissions?.user || [],
       }).length
 
       const isValidEmojiReaction = ['👍', '👎'].includes(reaction.emoji.name)

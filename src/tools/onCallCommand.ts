@@ -19,10 +19,15 @@ const invalidCall: InvalidCall = async ({
 }) => {
   const description: string[] = []
 
-  const commandPermissions = Command.permissions || []
   const needPermissions = {
-    user: commandPermissions.filter(perm => !permissions.user.includes(perm)),
-    bot: commandPermissions.filter(perm => !permissions.bot.includes(perm)),
+    client:
+      Command.permissions?.client?.filter(
+        perm => !permissions.client.includes(perm)
+      ) || [],
+    user:
+      Command.permissions?.user?.filter(
+        perm => !permissions.user.includes(perm)
+      ) || [],
   }
 
   const commandInitialized = new Command({ message, embed, messageArgs })
@@ -35,9 +40,9 @@ const invalidCall: InvalidCall = async ({
       description.push(`:red_circle: Need arguments: \`\`${Command.usage}\`\``)
       break
 
-    case !!needPermissions.bot.length:
+    case !!needPermissions.client.length:
       description.push(
-        `:red_circle: I need permissions: \`\`${needPermissions.bot.join(
+        `:red_circle: I need permissions: \`\`${needPermissions.client.join(
           ', '
         )}\`\``
       )

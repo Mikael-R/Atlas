@@ -19,7 +19,10 @@ class Join implements Command {
   static aliases = ['jn', 'connect']
   static description = 'Connect in voice channel'
   static minArguments = 0
-  static permissions: PermissionString[] = ['CONNECT']
+  static permissions = {
+    client: ['CONNECT'] as PermissionString[],
+  }
+
   static usage = 'join'
 
   validator() {
