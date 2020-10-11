@@ -9,6 +9,7 @@ export interface CommandClass {
     client?: PermissionString[]
     user?: PermissionString[]
   }
+  cooldown?: number
   minArguments: number
   usage: string
   example?: string

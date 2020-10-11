@@ -1,5 +1,9 @@
+import moment from 'moment'
+
 import { flag } from '../preferences.json'
 import { IsCall, InvalidCall, ErrorToRun } from '../types'
+import commandActions from './actions'
+import commandStore from './store'
 
 const isCall: IsCall = (message, messageArgs) => {
   return !(
@@ -35,7 +39,59 @@ const invalidCall: InvalidCall = async ({
     ? await commandInitialized.validator()
     : []
 
+  const userID = message.author.id
+  const { commandName } = Command
+
+  const userCooldown = commandStore
+    .getState()
+    .CommandCooldown.get(userID)
+    ?.find(value => value.commandName === commandName)
+
+  if (Command.cooldown) {
+    if (!userCooldown) {
+      commandStore.dispatch(
+        commandActions.setUserInCooldown(userID, {
+          commandName,
+          dateNow: moment(new Date()),
+        })
+      )
+
+      const timer = setTimeout(() => {
+        commandStore.dispatch(
+          commandActions.removeCommandFromCooldown(userID, { commandName })
+        )
+
+        const userHasCommandsInCooldown = !!commandStore
+          .getState()
+          .CommandCooldown.get(userID)?.length
+
+        if (!userHasCommandsInCooldown) {
+          commandStore.dispatch(
+            commandActions.deleteUserFromCooldown(userID, {})
+          )
+        }
+
+        clearTimeout(timer)
+      }, Command.cooldown * 1000)
+    }
+  }
+
+  const diferenceAsMilliseconds = userCooldown
+    ? Command.cooldown * 1000 -
+      Number(
+        moment
+          .duration(moment(new Date()).diff(userCooldown.dateNow))
+          .asMilliseconds()
+      )
+    : null
+
   switch (true) {
+    case !!userCooldown?.commandName:
+      description.push(
+        `:red_circle: Wait ${diferenceAsMilliseconds} milliseconds to use this command again`
+      )
+      break
+
     case messageArgs.length < Command.minArguments:
       description.push(`:red_circle: Need arguments: \`\`${Command.usage}\`\``)
       break

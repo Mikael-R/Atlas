@@ -24,6 +24,7 @@ class Kick implements Command {
     client: ['KICK_MEMBERS'] as PermissionString[],
   }
 
+  static cooldown = 3
   static usage = 'kick [mention, id]'
   static example = 'kick 736626386009194676'
 

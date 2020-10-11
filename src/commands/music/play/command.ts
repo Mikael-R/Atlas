@@ -43,6 +43,7 @@ class Play implements Command {
     client: ['SPEAK'] as PermissionString[],
   }
 
+  static cooldown = 6
   static usage = 'play [name, url, id]'
   static example = 'play Sub Urban - Cradles'
 

@@ -52,6 +52,11 @@ class Help implements Command {
           name: 'Description',
           value: Command.description,
         })
+        Command.cooldown &&
+          fields.push({
+            name: 'Cooldown',
+            value: `${Command.cooldown} seconds`,
+          })
         Command.permissions &&
           fields.push({
             name: 'Permissions',

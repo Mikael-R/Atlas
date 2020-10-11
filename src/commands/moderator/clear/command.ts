@@ -15,6 +15,7 @@ class Clear implements Command {
     user: ['MANAGE_MESSAGES'] as PermissionString[],
   }
 
+  static cooldown = 3
   static minArguments = 1
   static usage = 'clear [limit]'
   static example = 'clear 7'
