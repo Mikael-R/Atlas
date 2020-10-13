@@ -102,15 +102,7 @@ class Play implements Command {
       connection.channel.leave()
     }
 
-    connection.on('error', onError)
-    connection.on('failed', onError)
-    dispatcher.on('error', onError)
-    stream.on('error', onError)
-
-    connection.on('closing', onHandleDisconnect)
-    connection.on('disconnect', onHandleDisconnect)
-
-    stream.on('end', () => {
+    const onEnd = () => {
       songsStore.dispatch(
         songsActions.removeSongFromQueue(connection.channel.id, song.url)
       )
@@ -127,7 +119,17 @@ class Play implements Command {
       } else {
         startMusics()
       }
-    })
+    }
+
+    connection.on('error', onError)
+    connection.on('failed', onError)
+    dispatcher.on('error', onError)
+    stream.on('error', onError)
+
+    connection.on('closing', onHandleDisconnect)
+    connection.on('disconnect', onHandleDisconnect)
+
+    stream.on('end', onEnd)
 
     dispatcher.addListener('pause-stream-and-dispatcher', () => {
       stream.pause()
@@ -138,6 +140,8 @@ class Play implements Command {
       stream.resume()
       dispatcher.resume()
     })
+
+    dispatcher.addListener('skip-song', onEnd)
   }
 
   async run() {
