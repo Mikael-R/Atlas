@@ -76,19 +76,21 @@ const invalidCall: InvalidCall = async ({
     }
   }
 
-  const diferenceAsMilliseconds = userCooldown
-    ? Command.cooldown * 1000 -
-      Number(
-        moment
-          .duration(moment(new Date()).diff(userCooldown.dateNow))
-          .asMilliseconds()
+  const diferenceAsSeconds = userCooldown
+    ? Math.ceil(
+        Command.cooldown -
+          Number(
+            moment
+              .duration(moment(new Date()).diff(userCooldown.dateNow))
+              .asSeconds()
+          )
       )
     : null
 
   switch (true) {
     case !!userCooldown?.commandName:
       description.push(
-        `:red_circle: Wait ${diferenceAsMilliseconds} milliseconds to use this command again`
+        `:red_circle: Wait ${diferenceAsSeconds} seconds to use this command again`
       )
       break
 
