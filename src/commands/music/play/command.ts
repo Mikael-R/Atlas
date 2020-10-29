@@ -30,7 +30,7 @@ class Play implements Command {
 
     this.streamOptions = {
       type: 'opus',
-      highWaterMark: 1024,
+      highWaterMark: 1 << 25,
       volume: 0.4,
     }
   }
@@ -62,11 +62,6 @@ class Play implements Command {
 
       case !songSearchResult:
         return [':red_circle: No video found, check the search value provided']
-
-      case songSearchResult.duration.seconds > 900: // 900 seconds = 15 minutes
-        return [
-          ':red_circle: Sorry, in this moment not is possible play musics more than 15 minutes',
-        ]
 
       default:
         return []
